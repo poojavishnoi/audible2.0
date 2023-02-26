@@ -3,6 +3,9 @@ const app = express()
 const {default: mongoose} = require("mongoose")
 const cors = require('cors')
 const gTTS = require("gtts");
+const fs = require("fs");
+const util = require("util");
+const textToSpeech = require("@google-cloud/text-to-speech");
 require("dotenv/config")
 
 app.use(cors({origin:true}))
@@ -49,5 +52,20 @@ app.post("/api/convertfile" ,(req, res) => {
   convertTextToMp3();
   res.json({ msg: "Text to speech has completed. Audio file has been saved" });
 });
+
+async function listVoices(languageCode) {
+  const textToSpeech = require('@google-cloud/text-to-speech');
+
+  const client = new textToSpeech.TextToSpeechClient();
+
+  const [result] = await client.listVoices({languageCode});
+  const voices = result.voices;
+
+  voices.forEach((voice) => {
+    console.log(`${voice.name} (${voice.ssmlGender}): ${voice.languageCodes}`);
+  });
+}
+
+listVoices('en');
 
 app.listen(4000, console.log("Listening to port 4000."))
