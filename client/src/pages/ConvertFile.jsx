@@ -17,7 +17,7 @@ function ConvertFile() {
         <div className="flex">
           <div className="mx-20 my-10">
             <img
-              className="w-96 rounded-3xl object-contain "
+              className="w-96 rounded-3xl object-contain my-10 "
               src={img}
               alt="music"
             />
@@ -26,7 +26,7 @@ function ConvertFile() {
               <h1>- Anuv Jain</h1>
               <button
                 onClick={() => convertTextToSpeech(textValue)}
-                className="border p-2 rounded-md cursor-pointer"
+                className="border px-2 my-4 rounded-md cursor-pointer"
               >
                 Convert
               </button>
@@ -46,7 +46,7 @@ function ConvertFile() {
         </div>
       </div>
       <div className="p-10 text-center ">
-        <button className=" border w-44  text-xl py-2 px-5 rounded-2xl bg-brown text-white cursor-pointer">
+        <button className=" border w-44  text-2xl py-4 px-5 rounded-2xl bg-gray-900 text-white cursor-pointer">
           Save
         </button>
       </div>

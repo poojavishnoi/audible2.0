@@ -4,32 +4,25 @@ import blogImg from "../images/blog.jpg";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../config/firebase.config";
 import { useState, useEffect } from "react";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
+
 import { useNavigate } from "react-router";
 
 function Home() {
-
   const [file, setFile] = useState({});
-  const [textValue, setTextValue] = useState("")
-  const navigate = useNavigate()
+  const [textValue, setTextValue] = useState("");
+  const navigate = useNavigate();
 
   const convertFile = async () => {
-
     if (file?.name?.includes(".txt") || file?.name?.includes(".pdf")) {
-     
-      navigate('/convertfile', {
-        state :{
-          textValue: textValue
-        }
-      })
+      navigate("/convertfile", {
+        state: {
+          textValue: textValue,
+        },
+      });
     } else {
       window.alert("Sahi file daal");
     }
-
-    // return await response.json();
   };
-
 
   const handleChange = (e) => {
     setFile(e.target.files[0]);
@@ -78,7 +71,10 @@ function Home() {
             <p className="mt-1 text-sm " id="file_input_help">
               txt or pdf.
             </p>
-            <button onClick={convertFile} className="bg-orange-200  px-4 py-1 mt-3 cursor-pointer rounded-full">
+            <button
+              onClick={convertFile}
+              className="bg-orange-200  px-4 py-1 mt-3 cursor-pointer rounded-full"
+            >
               Convert
             </button>
           </div>
@@ -96,7 +92,16 @@ function Home() {
               If you feel that your organizational skills need improvement, then
               you must rely on tools strategies to help you be more productive.
             </h1>
-            <button className="m-4 p-1 absolute bottom-0 rounded-md bg-orange-200 cursor-pointer  border">
+            <button
+              onClick={() =>
+                navigate("/blog", {
+                  state: {
+                    id: 1,
+                  },
+                })
+              }
+              className="m-4 p-1 absolute bottom-0 rounded-md bg-orange-200 cursor-pointer  border"
+            >
               Read more
             </button>
           </div>
@@ -113,7 +118,16 @@ function Home() {
               Unfortunately, not many adults get an official diagnosis or
               treatment.
             </h1>
-            <button className="m-4 p-1 absolute bottom-0  rounded-md bg-orange-200 cursor-pointer  border">
+            <button
+              onClick={() =>
+                navigate("/blog", {
+                  state: {
+                    id: 2,
+                  },
+                })
+              }
+              className="m-4 p-1 absolute bottom-0  rounded-md bg-orange-200 cursor-pointer  border"
+            >
               Read more
             </button>
           </div>
@@ -129,7 +143,16 @@ function Home() {
               certain inalienable rights under the Individuals with Disabilities
               Education Act 2004 (IDEA)
             </h1>
-            <button className="m-4 p-1 absolute bottom-0 rounded-md bg-orange-200 cursor-pointer  border">
+            <button
+              onClick={() =>
+                navigate("/blog", {
+                  state: {
+                    id: 3,
+                  },
+                })
+              }
+              className="m-4 p-1 absolute bottom-0 rounded-md bg-orange-200 cursor-pointer  border"
+            >
               Read more
             </button>
           </div>
@@ -144,14 +167,22 @@ function Home() {
               in life. No adult wants to struggle with learning disabilities
               either.{" "}
             </h1>
-            <button className="m-4 p-1 absolute bottom-0  rounded-md bg-orange-200 cursor-pointer  border">
+            <button
+              onClick={() =>
+                navigate("/blog", {
+                  state: {
+                    id: 4,
+                  },
+                })
+              }
+              className="m-4 p-1 absolute bottom-0  rounded-md bg-orange-200 cursor-pointer  border"
+            >
               Read more
             </button>
           </div>
         </div>
       </div>
     </div>
-  
   );
 }
 
