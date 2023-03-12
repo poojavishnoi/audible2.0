@@ -68,13 +68,15 @@ const SubtitlePlayer = ({ audioSrc, subtitleSrc }) => {
 
   return (
     <div>
-      <audio
-        ref={audioRef}
-        onTimeUpdate={handleAudioTimeUpdate}
+
+    <ReactAudioPlayer 
+      ref={audioRef}
+        onListen={handleAudioTimeUpdate}
         src={audioSrc}
         className=" mb-10 w-full"
         controls
-      />
+    />
+     
       <div className=" h-96 overflow-y-scroll ">
         {subtitles.map((subtitle, index) => (
           <p

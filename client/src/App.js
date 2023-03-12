@@ -10,6 +10,7 @@ import { actionType } from "./context/reducer";
 import Footer from "./components/Footer";
 import Header from "./components/Header";
 import SavedLibrary from "./pages/SavedLibrary";
+import Blog from "./pages/Blog";
 
 function App() {
 
@@ -53,6 +54,7 @@ function App() {
         <Route path="/convertfile" element={<ConvertFile />} />
         <Route path="/*" element={<Home />} />
         <Route path="/savedlibrary" element={<SavedLibrary />} />
+        <Route path="/blog" element={<Blog />} />
 
       </Routes>
       <Footer/>

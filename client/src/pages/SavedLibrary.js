@@ -7,7 +7,7 @@ import { actionType } from "../context/reducer";
 
 export const AudioCard = ({ data, index }) => {
   return (
-    <motion.div className="relative p-5 m-5 flex justify-between items-center bg-white rounded-lg ">
+    <motion.div className="w-1/2 p-10 m-5 flex justify-between items-center  bg-white rounded-full ">
       <div className="flex">
         <img
           src={music}
@@ -19,7 +19,7 @@ export const AudioCard = ({ data, index }) => {
           <h2>10.45</h2>
         </div>
       </div>
-      <button className="border h-fit p-2 rounded-md bg-amber-900	 text-white">
+      <button className="border h-fit p-2 rounded-md bg-slate-200">
         Start
       </button>
     </motion.div>
@@ -42,17 +42,18 @@ function SavedLibrary() {
 
 
   return (
-    <div className="p-10 bg-emerald-50 ">
-      <h1 className="text-xl md:text-2xl xl:text-3xl text-center">
+    <div className="p-10 bg-cyan-800">
+      <h1 className="text-xl md:text-2xl xl:text-3xl text-center text-white ">
         Saved library
       </h1>
 
+ <div className=" relative flex flex-col justify-between items-center ">
       {allAudio &&
         allAudio?.map((data, i) => (
          <AudioCard data={data} index={i} />
         ))
       }
-
+</div>
     </div>
   );
 }
