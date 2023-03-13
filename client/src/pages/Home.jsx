@@ -17,7 +17,7 @@ function Home() {
 
 
   const convertFile = async () => {
-    if (file?.name?.includes(".txt") || file?.name?.includes(".pdf")) {
+    if (file?.name?.includes(".txt") || file?.name?.includes(".pdf") || file?.name?.includes(".docx")) {
       navigate("/convertfile", {
         state: {
           textValue: textValue,

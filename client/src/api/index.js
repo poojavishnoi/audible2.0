@@ -28,7 +28,7 @@ export const getAllAudio = async() => {
 
 export const convertTextToSpeech = async (textValue) => {
   try{
-    const response = await axios.post(`${baseUrl}home`,{text:JSON.stringify(textValue)},{headers:{"Content-Type": "application/json" },responseType: 'arraybuffer'
+    const response = await axios.post(`${baseUrl}api/convert/coqui`,{text:JSON.stringify(textValue)},{headers:{"Content-Type": "application/json" },responseType: 'arraybuffer'
     })  .then(async resp => {
       const blob = new Blob([resp.data], { type: 'application/zip' });
       const zip = new JSZip();
@@ -39,10 +39,10 @@ export const convertTextToSpeech = async (textValue) => {
       }
       return await wavFile.async('blob');
     })
-    // .then(wavBlob => {
-    //   const audio = new Audio(URL.createObjectURL(wavBlob));
-    //   audio.play();
-    // })
+    .then(wavBlob => {
+      const audio = new Audio(URL.createObjectURL(wavBlob));
+      audio.play();
+    })
     .catch(error => console.error(error));
   }catch{
 
