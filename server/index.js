@@ -28,6 +28,9 @@ app.use("/api/users/", userRoute)
 const audioRoute = require('./routes/audios')
 app.use("/api/audios/", audioRoute )
 
+const convertRoute = require('./routes/convert')
+app.use("/api/convert/", convertRoute )
+
 mongoose.set('strictQuery', false);
 mongoose.connect(process.env.DB_STRING, {
   useNewUrlParser: true,
@@ -150,23 +153,26 @@ app.post("/api/convertfile" ,(req, res) => {
 //   }
 // });
 
-app.post('/home', async function(req, res) {
-  try{
-    const text = req.body.text
-    const response = await request.post('http://127.0.0.1:5000/tts',
-    {json:{text:text,
-     speed:"fast"
-    }}
-    ).pipe(new PassThrough());
+//------------------------------------------------------------
+//this one works
+// app.post('/home', async function(req, res) {
+//   try{
+//     const text = req.body.text
+//     const response = await request.post('http://127.0.0.1:5000/tts',
+//     {json:{text:text,
+//      speed:"fast"
+//     }}
+//     ).pipe(new PassThrough());
 
-    res.set('Content-Type', 'application/zip');
-    res.set('Content-Disposition', 'attachment; filename="audio.zip"');
-    response.pipe(res);
-  }
-  catch(err){
-    console.log(err)
-  }
-});
+//     res.set('Content-Type', 'application/zip');
+//     res.set('Content-Disposition', 'attachment; filename="audio.zip"');
+//     response.pipe(res);
+//   }
+//   catch(err){
+//     console.log(err)
+//   }
+// });
+//------------------------------------------------------------
 
 // app.post('/home', function(req, res) {
 //   req.text=JSON.stringify("this is text")
@@ -193,39 +199,42 @@ app.post('/home', async function(req, res) {
 
 // listVoices('en');
 
-app.post("/google/convertfile" ,(req, res) => {
-  try{
-    const textValue = req.body.text; 
-    console.log("converting text::::::::", textValue);
-    convertTexttoMp3(textValue);
-    res.json({ msg: "Text to speech has completed. Audio file has been saved" });
-  }
-  catch(err){
-    console.log(err)
-  }
-})
+//------------------------------------------------------------
+//this one works
+// app.post("/google/convertfile" ,(req, res) => {
+//   try{
+//     const textValue = req.body.text; 
+//     console.log("converting text::::::::", textValue);
+//     convertTexttoMp3(textValue);
+//     res.json({ msg: "Text to speech has completed. Audio file has been saved" });
+//   }
+//   catch(err){
+//     console.log(err)
+//   }
+// })
 
-async function convertTexttoMp3(words) {
-  try{
+// async function convertTexttoMp3(words) {
+//   try{
 
-    const text = words 
-    //"This is a sample text, that im sending to the server, to test the api, and see if text to speech conversion works";
+//     const text = words 
+//     //"This is a sample text, that im sending to the server, to test the api, and see if text to speech conversion works";
 
-    const request = {
-      input: {text: text},
-      voice: {languageCode: "en-US", name: 'en-US-Wavenet-A' },
-      audioConfig: {audioEncoding: "MP3"},
-    };
+//     const request = {
+//       input: {text: text},
+//       voice: {languageCode: "en-US", name: 'en-US-Wavenet-A' },
+//       audioConfig: {audioEncoding: "MP3"},
+//     };
 
-    const [response] = await client.synthesizeSpeech(request);
-    const writeFile = util.promisify(fs.writeFile);
-    await writeFile("google_output.mp3", response.audioContent, "binary");
-    console.log("Audio content written to file: output.wav");
-  }
-  catch(err){
-    console.log(err)
-  }  
-}
+//     const [response] = await client.synthesizeSpeech(request);
+//     const writeFile = util.promisify(fs.writeFile);
+//     await writeFile("google_output.mp3", response.audioContent, "binary");
+//     console.log("Audio content written to file: output.wav");
+//   }
+//   catch(err){
+//     console.log(err)
+//   }  
+// }
+//------------------------------------------------------------
 
 
 app.listen(4000, console.log("Listening to port 4000."))
