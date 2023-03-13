@@ -4,13 +4,17 @@ import blogImg from "../images/blog.jpg";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../config/firebase.config";
 import { useState, useEffect } from "react";
-
 import { useNavigate } from "react-router";
+
+import * as pdfjsLib from 'pdfjs-dist' 
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js'
 
 function Home() {
   const [file, setFile] = useState({});
   const [textValue, setTextValue] = useState("");
   const navigate = useNavigate();
+  const [imgUrl, setImgUrl] = useState("")
+
 
   const convertFile = async () => {
     if (file?.name?.includes(".txt") || file?.name?.includes(".pdf")) {
@@ -24,19 +28,59 @@ function Home() {
     }
   };
 
-  const handleChange = (e) => {
+  const getPDFThumbnail = async (url) => {
+    // Load the PDF document
+    const fileReader = new FileReader();
+
+    fileReader.onload = async () => {
+      const pdfData = new Uint8Array(fileReader.result);
+      const pdf = await pdfjsLib.getDocument(pdfData).promise;
+      
+      // Fetch the first page of the PDF
+      const page = await pdf.getPage(1);
+
+      // Set the canvas dimensions and scale
+      const canvas = document.createElement('canvas');
+      const viewport = page.getViewport({ scale: 0.5 });
+      canvas.width = viewport.width;
+      canvas.height = viewport.height;
+    
+      // Render the PDF page to the canvas
+      const renderContext = {
+        canvasContext: canvas.getContext('2d'),
+        viewport: viewport
+      };
+      await page.render(renderContext).promise;
+    
+      // Convert the canvas to a base64-encoded thumbnail image
+
+      const dataUrl = canvas.toDataURL('image/jpeg');
+      setImgUrl(dataUrl);
+      return dataUrl;
+    }
+    fileReader.readAsArrayBuffer(url);
+
+  };
+  
+console.log(imgUrl);
+
+
+  const handleChange = async (e) => {
     setFile(e.target.files[0]);
-    const currentFile = e.target.files[0];
+
+    const file = e.target.files[0];
+    if (file.type === "application/pdf") {
+      await getPDFThumbnail(file)
+    }else{
 
     let reader = new FileReader();
-
     reader.onload = (e) => {
       const file = e.target.result;
       setTextValue(file);
     };
-
     reader.onerror = (e) => alert(e.target.error.name);
-    reader.readAsText(currentFile);
+    reader.readAsText(file);
+  }
   };
 
   return (
@@ -64,9 +108,7 @@ function Home() {
               className="block w-full md:w-1/2  text-sm text-white p-1  border rounded-md cursor-pointer bg-gray-800	 dark:text-gray-400 focus:outline-none"
               id="file_input"
               type="file"
-              onChange={(e) => {
-                handleChange(e);
-              }}
+              onChange={handleChange}
             />
             <p className="mt-1 text-sm " id="file_input_help">
               txt or pdf.
@@ -77,6 +119,10 @@ function Home() {
             >
               Convert
             </button>
+{
+  imgUrl ? <img src={imgUrl} alt="pic" /> : <></>
+}
+            
           </div>
         </div>
       </div>
@@ -113,8 +159,8 @@ function Home() {
               Dealing With an ADHD Diagnosis as an Adult
             </h1>
             <h1 className="text-sm px-4 ">
-              Many people associate ADHD with children, or think it’s a “kid’s
-              disorder”. But, about 4-5% of adults in the U.S. have it.
+              Many people associate ADHD witdetailsh children, or think it’s a
+              “kid’s disorder”. But, about 4-5% of adults in the U.S. have it.
               Unfortunately, not many adults get an official diagnosis or
               treatment.
             </h1>
