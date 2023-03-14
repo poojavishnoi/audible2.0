@@ -16,7 +16,7 @@ const SubtitlePlayer = ({ audioSrc, subtitleSrc }) => {
      {
         // Parse the SRT file into an array of subtitle objects
         const subtitles = subtitleSrc.trim()
-          .split("\n\n")
+          .split("/\n\s*\n/")
           .map((subtitle) => {
             console.log(subtitle + " awawawawa");
             const [index, time, text] = subtitle?.split("\n");
