@@ -7,29 +7,29 @@ const pdfjsLib = require('pdfjs-dist');
 
 router.post('/coqui', async function(req, res) {
     try{
-        if(req.body.text){
-            const file = req.files.file;
-            const buffer = file.data;
-            const pdfDoc = await pdfjsLib.getDocument(buffer).promise;
+        // if(req.body.text){
+        //     const file = req.files.file;
+        //     const buffer = file.data;
+        //     const pdfDoc = await pdfjsLib.getDocument(buffer).promise;
           
-            let text = '';
-            for (let i = 1; i <= pdfDoc.numPages; i++) {
-              const page = await pdfDoc.getPage(i);
-              const content = await page.getTextContent();
-              text += content.items.map(item => item.str).join(' ');
-            }
-        }
-      console.log("is the text ",text)
-      // const text = req.body.text
-      // const response = await request.post('http://127.0.0.1:5000/tts',
-      // {json:{text:text,
-      //  speed:"fast"
-      // }}
-      // ).pipe(new PassThrough());
+        //     let text = '';
+        //     for (let i = 1; i <= pdfDoc.numPages; i++) {
+        //       const page = await pdfDoc.getPage(i);
+        //       const content = await page.getTextContent();
+        //       text += content.items.map(item => item.str).join(' ');
+        //     }
+      //   // }
+      // console.log("is the text ",text)
+      const text = req.body.text
+      const response = await request.post('http://127.0.0.1:5000/tts',
+      {json:{text:text,
+       speed:"fast"
+      }}
+      ).pipe(new PassThrough());
   
-      // res.set('Content-Type', 'application/zip');
-      // res.set('Content-Disposition', 'attachment; filename="audio.zip"');
-      // response.pipe(res);
+      res.set('Content-Type', 'application/zip');
+      res.set('Content-Disposition', 'attachment; filename="audio.zip"');
+      response.pipe(res);
     }
     catch(err){
       console.log(err)

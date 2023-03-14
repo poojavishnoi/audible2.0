@@ -6,14 +6,11 @@ const SubtitlePlayer = ({ audioSrc, subtitleSrc }) => {
   const audioRef = useRef(null);
   const [subtitles, setSubtitles] = useState([]);
   const [currentSubtitleIndex, setCurrentSubtitleIndex] = useState(-1);
-
   useEffect(() => {
-    fetch(subtitleSrc)
-      .then((response) => response.text())
-      .then((data) => {
+    if(subtitleSrc!="")
+       {
         // Parse the SRT file into an array of subtitle objects
-        const subtitles = data
-          .trim()
+        const subtitles = decodeURIComponent(subtitleSrc).trim()
           .split("\n\n")
           .map((subtitle) => {
             const [index, time, text] = subtitle.split("\n");
@@ -25,9 +22,8 @@ const SubtitlePlayer = ({ audioSrc, subtitleSrc }) => {
             };
           });
         setSubtitles(subtitles);
-      })
-      .catch((error) => console.error(error));
-  }, [subtitleSrc]);
+      }
+    }, [subtitleSrc]);
 
 
 

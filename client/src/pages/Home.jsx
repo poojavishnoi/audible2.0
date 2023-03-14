@@ -16,6 +16,7 @@ function Home() {
     if (file?.name?.includes(".txt") || file?.name?.includes(".pdf") || file?.name?.includes(".docx")) {
       navigate("/convertfile", {
         state: {
+          extention: file.name.split(".")[1],
           textValue: textValue,
         },
       });
