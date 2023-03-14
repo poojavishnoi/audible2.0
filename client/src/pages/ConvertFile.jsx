@@ -61,10 +61,13 @@ function ConvertFile() {
           const wavBlob = await wavFile.async("blob");
           const srtText = await srtFile.async("text");
 
+          console.log(typeof(srtText) + " srt-text");
+
           const audio = new Audio(URL.createObjectURL(wavBlob));
 
           // Set the state to update the URL and SRT text
           setUrl(audio);
+
           setSrt(srtText);
         })
         .catch((error) => console.error(error));

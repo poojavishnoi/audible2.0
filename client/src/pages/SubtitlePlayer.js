@@ -6,18 +6,24 @@ const SubtitlePlayer = ({ audioSrc, subtitleSrc }) => {
   const audioRef = useRef(null);
   const [subtitles, setSubtitles] = useState([]);
   const [currentSubtitleIndex, setCurrentSubtitleIndex] = useState(-1);
+
+
+  console.log(subtitleSrc);
+
   useEffect(() => {
-    if(subtitleSrc!="")
-       {
+
+    if( typeof(subtitleSrc) !== "object")
+     {
         // Parse the SRT file into an array of subtitle objects
-        const subtitles = decodeURIComponent(subtitleSrc).trim()
+        const subtitles = subtitleSrc.trim()
           .split("\n\n")
           .map((subtitle) => {
-            const [index, time, text] = subtitle.split("\n");
+            console.log(subtitle + " awawawawa");
+            const [index, time, text] = subtitle?.split("\n");
             return {
               index,
-              start: TimeInDecimal(time.split(" --> ")[0]),
-              end: TimeInDecimal(time.split(" --> ")[1]),
+              start: TimeInDecimal(time?.split(" --> ")[0]),
+              end: TimeInDecimal(time?.split(" --> ")[1]),
               text,
             };
           });
@@ -29,7 +35,7 @@ const SubtitlePlayer = ({ audioSrc, subtitleSrc }) => {
 
   const TimeInDecimal = (time) => {
     const timeString = time;
-    const [hours, minutes, seconds] = timeString.split(':');
+    const [hours, minutes, seconds] = timeString?.split(':');
     const milliseconds = parseInt(timeString.split(',')[1]);
     const totalSeconds = parseInt(seconds) + parseInt(minutes) * 60 + parseInt(hours) * 3600;
     const timeInSeconds = totalSeconds + (milliseconds / 1000);
@@ -37,8 +43,7 @@ const SubtitlePlayer = ({ audioSrc, subtitleSrc }) => {
     return timeInSeconds
   };
 
-  console.log(subtitles);
-
+  console.log(subtitles, "subtitles");
   const handleAudioTimeUpdate = (event) => {
     const currentTime = event.target.currentTime;
 
