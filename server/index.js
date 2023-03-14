@@ -5,9 +5,9 @@ const cors = require('cors')
 const gTTS = require("gtts");
 const fs = require("fs");
 const util = require("util");
-const axios = require('axios')
-const { Readable } = require('stream');
-const AdmZip = require('adm-zip');
+// const axios = require('axios')
+// const { Readable } = require('stream');
+// const AdmZip = require('adm-zip');
 const request = require("request");
 const { PassThrough } = require('stream');
 
