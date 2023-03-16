@@ -22,16 +22,17 @@ router.post('/coqui', async function(req, res) {
         //     }
       //   // }
       // console.log("is the text ",text)
-      const text = req.body.text
-      const response = await request.post('http://127.0.0.1:5000/tts',
-      {json:{text:text,
-       speed:"fast"
-      }}
-      ).pipe(new PassThrough());
+      const text = req.body
+      console.log("body", text);
+      // const response = await request.post('http://127.0.0.1:5000/tts',
+      // {json:{text:text,
+      //  speed:"fast"
+      // }}
+      // ).pipe(new PassThrough());
   
-      res.set('Content-Type', 'application/zip');
-      res.set('Content-Disposition', 'attachment; filename="audio.zip"');
-      response.pipe(res);
+      // res.set('Content-Type', 'application/zip');
+      // res.set('Content-Disposition', 'attachment; filename="audio.zip"');
+      // response.pipe(res);
     }
     catch(err){
       console.log(err)

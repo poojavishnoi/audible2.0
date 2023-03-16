@@ -12,7 +12,7 @@ const baseUrl = "http://localhost:4000/";
 
 function ConvertFile() {
   const {
-    state: { textValue, extention, file, image },
+    state: { name, textValue, extention, file, image },
   } = useLocation();
 
 
@@ -32,7 +32,11 @@ function ConvertFile() {
         .post(
           `${baseUrl}api/convert/coqui`,
           { text: JSON.stringify(textValue),
-            extention: extention },
+            extention: extention,
+            speed: speed,
+            name: name,
+            file: file
+          },
           {
             headers: { "Content-Type": "application/json" },
             responseType: "arraybuffer",

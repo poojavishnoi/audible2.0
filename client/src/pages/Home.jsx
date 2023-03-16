@@ -5,32 +5,44 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../config/firebase.config";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
+import Swal from "sweetalert2";
 
-import * as pdfjsLib from 'pdfjs-dist' 
-pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js'
+import * as pdfjsLib from "pdfjs-dist";
+pdfjsLib.GlobalWorkerOptions.workerSrc =
+  "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js";
 
 function Home() {
   const [file, setFile] = useState({});
   const [textValue, setTextValue] = useState("");
   const navigate = useNavigate();
-  const [imgUrl, setImgUrl] = useState("")
-
+  const [imgUrl, setImgUrl] = useState("");
+  const [FileType, setFileType] = useState("");
 
   const convertFile = async () => {
-    if (file?.name?.includes(".txt") || file?.name?.includes(".pdf") || file?.name?.includes(".docx")) {
+    if (
+      file?.name?.includes(".txt") ||
+      file?.name?.includes(".pdf") ||
+      file?.name?.includes(".docx")
+    ) {
       navigate("/convertfile", {
         state: {
-          extention: file.name.split(".")[1],
+          name: materialname,
+          extention: FileType,
           textValue: textValue,
-          file: file,
-          image: imgUrl
+          file: material,
+          image: imgUrl,
         },
       });
     } else {
-      window.alert("Sahi file daal");
+      Swal.fire({
+        icon: "warning",
+        title: "Please Enter File Formats Of Pdf, Docs, Txt",
+        showConfirmButton: false,
+        timer: 1500,
+      });
     }
   };
-
+  //file.name.split(".")[1],
   const getPDFThumbnail = async (url) => {
     // Load the PDF document
     const fileReader = new FileReader();
@@ -38,65 +50,109 @@ function Home() {
     fileReader.onload = async () => {
       const pdfData = new Uint8Array(fileReader.result);
       const pdf = await pdfjsLib.getDocument(pdfData).promise;
- 
+
       //content
       const pages = [];
       for (let i = 1; i <= pdf.numPages; i++) {
         const page = await pdf.getPage(i);
         const content = await page.getTextContent();
-        const text = content.items.map(item => item.str).join('');
+        const text = content.items.map((item) => item.str).join("");
         pages.push(text);
       }
- 
-      setTextValue(pages.join());
 
+      setTextValue(pages.join());
 
       // Fetch the first page of the PDF
       const page = await pdf.getPage(1);
 
       // Set the canvas dimensions and scale
-      const canvas = document.createElement('canvas');
+      const canvas = document.createElement("canvas");
       const viewport = page.getViewport({ scale: 1.5 });
       canvas.width = viewport.width;
       canvas.height = viewport.height;
-    
+
       // Render the PDF page to the canvas
       const renderContext = {
-        canvasContext: canvas.getContext('2d'),
-        viewport: viewport
+        canvasContext: canvas.getContext("2d"),
+        viewport: viewport,
       };
       await page.render(renderContext).promise;
-    
+
       // Convert the canvas to a base64-encoded thumbnail image
 
-      const dataUrl = canvas.toDataURL('image/jpeg');
+      const dataUrl = canvas.toDataURL("image/jpeg");
       setImgUrl(dataUrl);
       return dataUrl;
-    }
+    };
     fileReader.readAsArrayBuffer(url);
-
   };
 
+  const [materialname, setmaterialname] = useState();
+  const [material, setmaterial] = useState();
+  const fileChange = (file) => {
+    const fil = file.target.files[0];
+    let s = fil.name;
+    let stop = s.indexOf(".");
+    setmaterialname(s.slice(0, stop));
+    const reader = new FileReader();
+    reader.readAsDataURL(file.target.files[0]);
+    if (
+      file.target.files[0].type ==
+      "application/vnd.openxmlformats-officedocument.presentationml.presentation"
+    ) {
+      setFileType("pptx");
+      reader.onloadend = () => {
+        setmaterial(reader.result.slice(reader.result.indexOf(",") + 1));
+      };
+    } else if (file.target.files[0].type == "application/pdf") {
+      setFileType("pdf");
+      reader.onloadend = () => {
+        setmaterial(reader.result.slice(reader.result.indexOf(",") + 1));
+      };
+    } else if (
+      file.target.files[0].type ==
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    ) {
+      setFileType("docx");
+      reader.onloadend = () => {
+        setmaterial(reader.result.slice(reader.result.indexOf(",") + 1));
+      };
+    } else if (file.target.files[0].type == "image/jpeg") {
+      setFileType("jpeg");
+      reader.onloadend = () => {
+        setmaterial(reader.result.slice(reader.result.indexOf(",") + 1));
+      };
+    } else if (file.target.files[0].type == "image/png") {
+      setFileType("png");
+      reader.onloadend = () => {
+        setmaterial(reader.result.slice(reader.result.indexOf(",") + 1));
+      };
+    } else {
+      Swal.fire({
+        icon: "warning",
+        title: "Please Enter File Formats Of Pdf, Ppt, Docs, Jpeg",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+    }
+  };
 
   const handleChange = async (e) => {
     setFile(e.target.files[0]);
-
+    fileChange(e);
     const file = e.target.files[0];
     if (file.type === "application/pdf") {
-      await getPDFThumbnail(file)
-    }else{
-
-    let reader = new FileReader();
-    reader.onload = (e) => {
-      const file = e.target.result;
-      setTextValue(file);
-    };
-    reader.onerror = (e) => alert(e.target.error.name);
-    reader.readAsText(file);
-  }
+      await getPDFThumbnail(file);
+    } else {
+      let reader = new FileReader();
+      reader.onload = (e) => {
+        const file = e.target.result;
+        setTextValue(file);
+      };
+      reader.onerror = (e) => alert(e.target.error.name);
+      reader.readAsText(file);
+    }
   };
-
-
 
   return (
     <div>
@@ -134,7 +190,6 @@ function Home() {
             >
               Convert
             </button>
-            
           </div>
         </div>
       </div>
