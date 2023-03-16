@@ -22,6 +22,8 @@ function Home() {
         state: {
           extention: file.name.split(".")[1],
           textValue: textValue,
+          file: file,
+          image: imgUrl
         },
       });
     } else {
@@ -36,13 +38,25 @@ function Home() {
     fileReader.onload = async () => {
       const pdfData = new Uint8Array(fileReader.result);
       const pdf = await pdfjsLib.getDocument(pdfData).promise;
-      
+ 
+      //content
+      const pages = [];
+      for (let i = 1; i <= pdf.numPages; i++) {
+        const page = await pdf.getPage(i);
+        const content = await page.getTextContent();
+        const text = content.items.map(item => item.str).join('');
+        pages.push(text);
+      }
+ 
+      setTextValue(pages.join());
+
+
       // Fetch the first page of the PDF
       const page = await pdf.getPage(1);
 
       // Set the canvas dimensions and scale
       const canvas = document.createElement('canvas');
-      const viewport = page.getViewport({ scale: 0.5 });
+      const viewport = page.getViewport({ scale: 1.5 });
       canvas.width = viewport.width;
       canvas.height = viewport.height;
     
@@ -82,6 +96,8 @@ function Home() {
   }
   };
 
+
+
   return (
     <div>
       <div className="bg-rose-50 px-4 py-44 md:px-20  xl:px-40 xl:py-20  ">
@@ -118,9 +134,6 @@ function Home() {
             >
               Convert
             </button>
-{
-  imgUrl ? <img src={imgUrl} alt="pic" /> : <></>
-}
             
           </div>
         </div>
