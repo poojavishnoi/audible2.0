@@ -20,7 +20,8 @@ function ConvertFile() {
       const response = await axios
         .post(
           `${baseUrl}api/convert/coqui`,
-          { text: JSON.stringify(textValue) },
+          { text: JSON.stringify(textValue),
+            extention: extention },
           {
             headers: { "Content-Type": "application/json" },
             responseType: "arraybuffer",

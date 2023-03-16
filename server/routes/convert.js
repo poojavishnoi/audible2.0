@@ -4,6 +4,8 @@ const { PassThrough } = require('stream');
 const textToSpeech = require("@google-cloud/text-to-speech");
 const client = new textToSpeech.TextToSpeechClient();
 const pdfjsLib = require('pdfjs-dist');
+const util = require("util");
+const fs = require("fs");
 
 router.post('/coqui', async function(req, res) {
     try{
@@ -62,8 +64,15 @@ async function convertTexttoMp3(words) {
   
       const [response] = await client.synthesizeSpeech(request);
       const writeFile = util.promisify(fs.writeFile);
+      console.log("writing file", typeof(response.audioContent))
       await writeFile("google_output.mp3", response.audioContent, "binary");
+
       console.log("Audio content written to file: output.wav");
+
+      const resp = await request.post('http://127.0.0.1:5000/transcribe',
+      {json:{audio:"google_output.mp3"
+      }}
+      );
     }
     catch(err){
       console.log(err)

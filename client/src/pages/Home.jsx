@@ -62,8 +62,6 @@ function Home() {
     fileReader.readAsArrayBuffer(url);
 
   };
-  
-console.log(imgUrl);
 
 
   const handleChange = async (e) => {
