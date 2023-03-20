@@ -96,6 +96,9 @@ function Home() {
     setmaterialname(s.slice(0, stop));
     const reader = new FileReader();
     reader.readAsDataURL(file.target.files[0]);
+    if (file.target.files[0].type == "text/plain") {
+      return
+    }
     if (
       file.target.files[0].type ==
       "application/vnd.openxmlformats-officedocument.presentationml.presentation"

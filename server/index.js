@@ -15,6 +15,9 @@ const textToSpeech = require("@google-cloud/text-to-speech");
 const client = new textToSpeech.TextToSpeechClient();
 require("dotenv/config")
 
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
+
 app.use(cors({origin:true}))
 app.use(express.json())
 
@@ -26,7 +29,7 @@ const userRoute = require('./routes/auth')
 app.use("/api/users/", userRoute)
 
 const audioRoute = require('./routes/audios')
-app.use("/api/audios/", audioRoute )
+app.use("/api/mongi/", audioRoute )
 
 const convertRoute = require('./routes/convert')
 app.use("/api/convert/", convertRoute )

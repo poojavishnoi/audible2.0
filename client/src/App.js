@@ -11,6 +11,7 @@ import Footer from "./components/Footer";
 import Header from "./components/Header";
 import SavedLibrary from "./pages/SavedLibrary";
 import Blog from "./pages/Blog";
+import Text from "./pages/legacy";
 
 function App() {
 
@@ -55,6 +56,7 @@ function App() {
         <Route path="/*" element={<Home />} />
         <Route path="/savedlibrary" element={<SavedLibrary />} />
         <Route path="/blog" element={<Blog />} />
+        <Route path="/legacy" element={<Text/>}/>
 
       </Routes>
       <Footer/>
