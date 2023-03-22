@@ -6,8 +6,10 @@ import { useState } from "react";
 import img from "../images/img.jpg";
 import Music from "../audio.mp3";
 import SubtitlePlayer from "./SubtitlePlayer";
-// import {Flipbook} from '../components/Flipbook'
+import FlipBook from "../components/FlipBook";
 import Dropdown from "../components/Dropdown";
+import NewFlipBook from "../components/NewFlipBook";
+
 const baseUrl = "http://localhost:4000/";
 
 function ConvertFile() {
@@ -15,16 +17,14 @@ function ConvertFile() {
     state: { textValue, extention, file, image },
   } = useLocation();
 
-
   const [url, setUrl] = useState([]);
   const [speed, setSpeed] = useState("slow");
   const [srt, setSrt] = useState([]);
 
   const handleSpeed = (speed) => {
     setSpeed(speed);
-  }
+  };
 
-  console.log(speed);
 
   const ConvertTextToSpeech = async (textValue) => {
     try {
@@ -72,7 +72,7 @@ function ConvertFile() {
           const wavBlob = await wavFile.async("blob");
           const srtText = await srtFile.async("text");
 
-          console.log(typeof(srtText) + " srt-text");
+          console.log(typeof srtText + " srt-text");
 
           const audio = new Audio(URL.createObjectURL(wavBlob));
 
@@ -85,21 +85,20 @@ function ConvertFile() {
     } catch {}
   };
 
-  // console.log(srt);
 
   return (
     <div className="">
-      <div className=" text-white rounded-3xl h-fit mx-10 bg-rose-800	  p-10">
+      <div className=" text-white rounded-3xl mx-10 bg-rose-800 w-11/12 h-screen p-10">
         <div className="flex">
           <div className="mx-20">
             <img
-              className=" w-96 rounded-3xl  object-contain my-10 "
+              className=" rounded-3xl w-56  object-contain my-10 "
               src={image ? image : img}
               alt="music"
             />
             <div className="my-4">
               <h1 className=" text-2xl">{file.name}</h1>
-              <Dropdown handleSpeed={handleSpeed}/>
+              <Dropdown handleSpeed={handleSpeed} />
               <button
                 onClick={() => ConvertTextToSpeech(textValue)}
                 className="border px-2 my-4 rounded-md cursor-pointer"
@@ -108,20 +107,24 @@ function ConvertFile() {
               </button>
             </div>
           </div>
-          <div className="mr-20 my-10 w-full rounded-lg p-10 text-xl bg-white text-black">
+          
+          <NewFlipBook/>
+
+          {/* <div className="mr-20 my-10 w-full rounded-lg p-10 text-xl bg-white text-black">
             <h1 className="">SUBTITLES</h1>
             <p id="subtitles" className="pt-4 m-4 text-2xl tracking-wide">
               <div>
-                <div  className="w-full h-full">
-                {/* {textValue} */}
-                {/* <Flipbook url={file} /> */}
-                    {url && srt && (
-                      <SubtitlePlayer audioSrc={url.src} subtitleSrc={srt} />
-                    )}
+                <div className="w-full h-full">
+                   {url && srt && (
+                      <SubtitlePlayer audioSrc={Music} subtitleSrc={'sample.srt'} />
+                    )} 
                 </div>
               </div>
             </p>
-          </div>
+          </div> */}
+
+        
+
         </div>
       </div>
       <div className="p-10 text-center ">

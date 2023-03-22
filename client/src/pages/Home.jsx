@@ -99,15 +99,12 @@ function Home() {
 
   return (
     <div>
-      <div className="bg-rose-50 px-4 py-44 md:px-20  xl:px-40 xl:py-20  ">
+      <div className=" w-100% bg-image py-10 px-44 my-4">
         <div className="flex ">
-          <img
-            className="w-44 md:w-1/3 xl:w-1/5 rounded-3xl object-contain bg-white"
-            src={homeImg}
-            alt="home"
-          />
-          <div className=" w-full p-4 ml-4 xl:ml-16 md:w-1/2 ">
-            <h1 className="text-4xl md:text-5xl xl:text-6xl ">Audible2.0</h1>
+         
+          <div className=" w-full py-60 p-4 ml-4 xl:ml-16 md:w-1/2 ">
+            <h1 className="text-4xl md:text-5xl xl:text-6xl ">
+            Audio book for your kids</h1>
             <h1 className=" text-lg md:text-xl xl:text-2xl pt-3">
               Make learning alot of fun by listening the book.
             </h1>
@@ -124,17 +121,22 @@ function Home() {
               type="file"
               onChange={handleChange}
             />
-            <p className="mt-1 text-sm " id="file_input_help">
+            <p className="mt-1 text-sm" id="file_input_help">
               txt or pdf.
             </p>
             <button
               onClick={convertFile}
-              className="bg-orange-200  px-4 py-1 mt-3 cursor-pointer rounded-full"
+              className="orange text-white px-6 py-3 mt-3 cursor-pointer rounded-lg"
             >
               Convert
             </button>
             
           </div>
+          {/* <img
+            className="w-96  object-cover bg-white"
+            src={homeImg}
+            alt="home"
+          /> */}
         </div>
       </div>
 
