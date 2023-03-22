@@ -19,7 +19,7 @@ function Header() {
   }
 
   return (
-    <header className="flex justify-between p-5 max-w-7xl mx-auto ">
+    <header className="flex justify-between max-w-7xl p-4 mx-auto ">
     <div className="flex items-center space-x-5">
       <a href="/">
       <div className="flex items-center">
@@ -30,7 +30,9 @@ function Header() {
       </a>
 
       <div className="hidden md:inline-flex items-center space-x-5">
-        <h3>About</h3>
+      <NavLink to={'/library'}>
+      Library
+        </NavLink>
         <h3>Contact</h3>
       </div>
     </div>
@@ -40,7 +42,7 @@ function Header() {
     onMouseLeave={() => setIsMenu(false)}
     className="flex gap-2 ml-auto items-center relative">
     <a href="/library">
-      <button className="py-2 px-4 text-sm bg-orange-200 rounded-md text-small">Listen now</button>
+      <button className="py-2 px-4 mr-4 text-sm yellow rounded-md text-small">Listen now</button>
     </a>
     <img className="w-12 rounded-full cursor-pointer" src={user?.user.imageURL} alt="userrProfile" referrerPolicy='no-referrer'/>
     

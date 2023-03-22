@@ -1,0 +1,125 @@
+/* 
+*:before,
+*:after {
+  box-sizing: inherit;
+  background-size: cover;
+} */
+
+
+.library {
+  /* The image used */
+  background-color: aliceblue;
+  position: relative;
+  /* Full height */
+  height: 100%;
+  width: 100%;
+
+  /* Center and scale the image nicely */
+}
+
+.shelf {
+  /* The image used */
+  background-image: url("../images/shelf.jpeg");
+  height: 55%;
+  width: 90%;
+  position: relative;
+  z-index: 9;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  left: 4vw;
+  top: 50vh;
+  margin-bottom: 30vh;
+}
+.container,
+.card,
+.card_front,
+.card_back {
+  width: 15vw;
+  position: relative;
+  top: -12vh;
+  left: 8vw;
+  height: 23vw;
+  perspective: 100vw;
+  float: left;
+  margin-right: 3.6em;
+}
+
+.card_front,
+.card_back {
+  /*   height: 100%; */
+  background-color: none;
+  box-shadow: 0px 5px 25px 0px rgba(51, 51, 51, 0.28);
+}
+
+@supports (display: flex) {
+  .card_front {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+.card_front {
+  position: relative;
+  background-image: url("../images/book.jpeg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  object-fit: fill;
+}
+
+.card_back {
+  /*   display: none; */
+  background-color: white;
+}
+
+.card_front > *,
+.card_back > * {
+  background-color: white;
+  background-color: rgba(255, 255, 255, 0.75);
+}
+
+.card-text {
+  padding: 0 1em 1em 1em;
+  line-height: 1.2;
+}
+
+/* p:first-of-type {
+  margin-top: 0;
+  font-size: 2vh;
+  border-top: 8px solid #333;
+} */
+
+/* FLIP CARD STYLING */
+.container {
+  perspective: 1000px;
+}
+
+.container:hover .card,
+.container.hover {
+  transform: rotateY(-180deg);
+}
+
+.card {
+  transition: 0.6s;
+  transform-style: preserve-3d;
+  position: relative;
+}
+
+.card_front,
+.card_back {
+  backface-visibility: hidden;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.card_front {
+  z-index: 2;
+  transform: rotateY(0deg);
+}
+
+.card_back {
+  transform: rotateY(-180deg);
+}
