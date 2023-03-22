@@ -1,5 +1,6 @@
 import React from "react";
 import { useLocation } from "react-router";
+import { useStateValue } from '../context/StateProvider'
 import JSZip from "jszip";
 import axios from "axios";
 import { useState } from "react";
@@ -9,29 +10,38 @@ import SubtitlePlayer from "./SubtitlePlayer";
 import FlipBook from "../components/FlipBook";
 import Dropdown from "../components/Dropdown";
 import NewFlipBook from "../components/NewFlipBook";
-
+import Swal from 'sweetalert2';
 const baseUrl = "http://localhost:4000/";
 
 function ConvertFile() {
   const {
-    state: { textValue, extention, file, image },
+    state: { name, textValue, extention, file, image },
   } = useLocation();
+  
+  const [{user}, dispatch] = useStateValue()
 
   const [url, setUrl] = useState([]);
   const [speed, setSpeed] = useState("slow");
   const [srt, setSrt] = useState([]);
+  const [audioblob, setaudioblob] = useState([]);
 
   const handleSpeed = (speed) => {
     setSpeed(speed);
   };
 
+  console.log(user, "user");
 
   const ConvertTextToSpeech = async (textValue) => {
     try {
       const response = await axios
         .post(
           `${baseUrl}api/convert/coqui`,
-          { text: JSON.stringify(textValue) },
+          { text: JSON.stringify(textValue),
+            extention: extention,
+            speed: speed,
+            name: name,
+            file: file
+          },
           {
             headers: { "Content-Type": "application/json" },
             responseType: "arraybuffer",
@@ -71,8 +81,8 @@ function ConvertFile() {
 
           const wavBlob = await wavFile.async("blob");
           const srtText = await srtFile.async("text");
-
-          console.log(typeof srtText + " srt-text");
+          setaudioblob(wavBlob)
+          console.log(typeof(srtText) + " srt-text");
 
           const audio = new Audio(URL.createObjectURL(wavBlob));
 
@@ -84,6 +94,72 @@ function ConvertFile() {
         .catch((error) => console.error(error));
     } catch {}
   };
+
+  const Saveaudioandtext = async (name, speed, user) => {
+    try{
+      console.log(name, extention);
+    const formData = new FormData();
+    // Append the audio and zip files to the form data
+    formData.append('audio', audioblob, 'audio.wav');
+    // Append the SRT file to the form data
+    formData.append('srt', new Blob([srt], { type: 'text/plain' }), 'subtitle.srt');
+    formData.append('file_name', name);
+    formData.append('author_email', user.user.email);
+    formData.append('quality', speed);
+    formData.append('file', file);
+    formData.append('file_type', extention);
+    formData.append('image', image);
+    formData.append('text', JSON.stringify(textValue))
+    console.log(formData, "formdata");
+    await axios.post(`${baseUrl}api/mongi/save`, formData, {
+      headers: {'Content-Type': 'multipart/form-data'}
+    }).then(async (res)=>{
+      console.log(res)
+      if(res.status === 200 && res.data.success === true){
+      Swal.fire({
+        title: "Success!",
+        text: "Your file has been saved",
+        icon: "success",
+        button: "Ok",
+      })
+      }
+      else{
+        if(res.data.message === "File already exists" && res.data.success === false){
+        Swal.fire({
+          title: "Oops!",
+          text: "File already exists",
+          icon: "warning",
+          button: "Ok",
+        })
+      }
+      else{
+        Swal.fire({
+          title: "Error!",
+          text: "Something went wrong",
+          icon: "error",
+          button: "Ok",
+        })
+      }
+    }
+  });
+    
+    // Send the form data to the backend
+      // const blob = new Blob([zipblob], { type: "application/zip" });
+      //     const zip = await JSZip.loadAsync(blob);
+      //     console.log(zip, "zip");
+      // const response = await axios.post(`${baseUrl}api/mongi/save`, {
+      //   name: name,
+      //   user: user.user,
+      //   lob: zip,
+      //   quality: speed
+      // });
+      // console.log(response);
+    }
+    catch(error){
+      console.log(error);
+    }
+  }
+
 
 
   return (
@@ -97,8 +173,8 @@ function ConvertFile() {
               alt="music"
             />
             <div className="my-4">
-              <h1 className=" text-2xl">{file.name}</h1>
-              <Dropdown handleSpeed={handleSpeed} />
+              <h1 className=" text-2xl">{name}</h1>
+              <Dropdown handleSpeed={handleSpeed}/>
               <button
                 onClick={() => ConvertTextToSpeech(textValue)}
                 className="border px-2 my-4 rounded-md cursor-pointer"
@@ -128,7 +204,9 @@ function ConvertFile() {
         </div>
       </div>
       <div className="p-10 text-center ">
-        <button className=" border w-44  text-2xl py-4 px-5 rounded-2xl bg-gray-900 text-white cursor-pointer">
+        <button 
+          onClick={() => Saveaudioandtext(name, speed, user)}
+          className=" border w-44  text-2xl py-4 px-5 rounded-2xl bg-gray-900 text-white cursor-pointer">
           Save
         </button>
       </div>
