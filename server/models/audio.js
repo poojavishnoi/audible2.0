@@ -7,7 +7,6 @@ const AudioSchema = mongoose.Schema({
   },
   file: {
     type: String,
-    required: true
   },
   file_type: {
     type: String,
@@ -15,7 +14,6 @@ const AudioSchema = mongoose.Schema({
   },
   image: {
     type: String,
-    required: true
   },
   author_email: {
     type: String,
@@ -27,7 +25,7 @@ const AudioSchema = mongoose.Schema({
   },
   listeners:{
     type: Array,
-    default: []
+    default: [{email: {type: String}, paused: {type: Number, default: 0}}]
   },
   audio: {
     type: String,

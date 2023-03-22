@@ -6,13 +6,12 @@ const Audio = require('../models/audio')
 
 router.post("/save", upload.fields([{ name: 'audio', maxCount: 1 }, { name: 'srt', maxCount: 1 }]), async(req,res) => {
   const { image, file_name, file, file_type, author_email, quality, text} = req.body;
+  console.log("req.body: ", req.body);
   const { audio, srt } = req.files;
   const visibility = true
-  const listeners = [author_email]
-  // convert audio and srt files to base64
+  const listeners = [{author_email, paused: 0}]
   const audioData = audio[0].buffer.toString('base64');
   const srtData = srt[0].buffer.toString('base64');
-  // console.log("audio:---------------\n", audioFile);
   const newAudio = new Audio({
     file_name,
     file,
@@ -26,9 +25,18 @@ router.post("/save", upload.fields([{ name: 'audio', maxCount: 1 }, { name: 'srt
     srt: srtData,
     text
   });
+  console.log("newAudio: ", newAudio);
   try{
-    const savedAudio = await newAudio.save();
-    return res.status(200).send({success: true, audio: savedAudio})
+    const exists = await Audio.find({file_name: file_name, author_email: author_email})
+    if(exists>0){
+      console.log("File already exists", exists);
+      return res.send({success: false, message: "File already exists"})
+    }
+    else{
+      const savedAudio = await newAudio.save();
+      return res.status(200).send({success: true, audio: savedAudio})
+    }
+    
   }catch(error){
     return res.status(400).send({success: false, msg:error})
   }
@@ -49,27 +57,43 @@ router.post("/save", upload.fields([{ name: 'audio', maxCount: 1 }, { name: 'srt
   // }
 })
 
-router.get("/getOne/:email", async(req,res) => {
+router.get("/getcreated/:email", async(req,res) => {
   const filter = {author_email: req.params.email}
-  const data = await Audio.find(filter)
+  const options = {
+    file_name: true,
+    image: true,
+    author_email: true,
+    visibility: true,
+    listeners: true,
+    srt: true,
+    audio: true,
+    text: true,
+  }
+  const data = await Audio.find(filter, options)
   if(data){
-    return res.status(200).send({success: true, song:data})
+    return res.status(200).send({success: true, audio:data})
   }else{
     return res.status(400).send({success:false, msg: 'Data not found'})
   }
 })
 
-router.get("/getAll", async(req,res) => {
+router.get("/getLibrary/:email", async(req,res) => {
+  const filter = {visibility: true, listeners: {$elemMatch: {author_email: req.params.email}}}
   const options = {
-    sort: {
-      createdAt:1,
-    }
+    file_name: true,
+    image: true,
+    author_email: true,
+    visibility: true,
+    listeners: true,
+    srt: true,
+    audio: true,
+    text: true,
   }
 
-  const data = await song.find();
-  console.log(data);
+  const data = await Audio.find(filter, options);
+
   if(data){
-    return res.status(200).send({success: true, song: data})
+    return res.status(200).send({success: true, audio: data})
   }else{
     return res.status(400).send({success: false, msg: "Data not found"})
   }

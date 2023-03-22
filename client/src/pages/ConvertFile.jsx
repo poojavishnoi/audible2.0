@@ -7,8 +7,8 @@ import { useState } from "react";
 import img from "../images/img.jpg";
 import Music from "../audio.mp3";
 import SubtitlePlayer from "./SubtitlePlayer";
-// import {Flipbook} from '../components/Flipbook'
 import Dropdown from "../components/Dropdown";
+import Swal from 'sweetalert2';
 const baseUrl = "http://localhost:4000/";
 
 function ConvertFile() {
@@ -95,7 +95,7 @@ function ConvertFile() {
 
   const Saveaudioandtext = async (name, speed, user) => {
     try{
-
+      console.log(name, extention);
     const formData = new FormData();
     // Append the audio and zip files to the form data
     formData.append('audio', audioblob, 'audio.wav');
@@ -108,12 +108,39 @@ function ConvertFile() {
     formData.append('file_type', extention);
     formData.append('image', image);
     formData.append('text', JSON.stringify(textValue))
-
+    console.log(formData, "formdata");
     await axios.post(`${baseUrl}api/mongi/save`, formData, {
       headers: {'Content-Type': 'multipart/form-data'}
     }).then(async (res)=>{
       console.log(res)
-    });
+      if(res.status === 200 && res.data.success === true){
+      Swal.fire({
+        title: "Success!",
+        text: "Your file has been saved",
+        icon: "success",
+        button: "Ok",
+      })
+      }
+      else{
+        if(res.data.message === "File already exists" && res.data.success === false){
+        Swal.fire({
+          title: "Oops!",
+          text: "File already exists",
+          icon: "warning",
+          button: "Ok",
+        })
+      }
+      else{
+        Swal.fire({
+          title: "Error!",
+          text: "Something went wrong",
+          icon: "error",
+          button: "Ok",
+        })
+      }
+    }
+  });
+    
     // Send the form data to the backend
       // const blob = new Blob([zipblob], { type: "application/zip" });
       //     const zip = await JSZip.loadAsync(blob);

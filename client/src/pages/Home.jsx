@@ -97,47 +97,48 @@ function Home() {
     const reader = new FileReader();
     reader.readAsDataURL(file.target.files[0]);
     if (file.target.files[0].type == "text/plain") {
-      return
+      setFileType("txt");
+      setmaterial("")      
     }
-    if (
-      file.target.files[0].type ==
-      "application/vnd.openxmlformats-officedocument.presentationml.presentation"
-    ) {
-      setFileType("pptx");
-      reader.onloadend = () => {
-        setmaterial(reader.result.slice(reader.result.indexOf(",") + 1));
-      };
-    } else if (file.target.files[0].type == "application/pdf") {
-      setFileType("pdf");
-      reader.onloadend = () => {
-        setmaterial(reader.result.slice(reader.result.indexOf(",") + 1));
-      };
-    } else if (
-      file.target.files[0].type ==
-      "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-    ) {
-      setFileType("docx");
-      reader.onloadend = () => {
-        setmaterial(reader.result.slice(reader.result.indexOf(",") + 1));
-      };
-    } else if (file.target.files[0].type == "image/jpeg") {
-      setFileType("jpeg");
-      reader.onloadend = () => {
-        setmaterial(reader.result.slice(reader.result.indexOf(",") + 1));
-      };
-    } else if (file.target.files[0].type == "image/png") {
-      setFileType("png");
-      reader.onloadend = () => {
-        setmaterial(reader.result.slice(reader.result.indexOf(",") + 1));
-      };
-    } else {
-      Swal.fire({
-        icon: "warning",
-        title: "Please Enter File Formats Of Pdf, Ppt, Docs, Jpeg",
-        showConfirmButton: false,
-        timer: 1500,
-      });
-    }
+    else if (
+        file.target.files[0].type ==
+        "application/vnd.openxmlformats-officedocument.presentationml.presentation"
+      ) {
+        setFileType("pptx");
+        reader.onloadend = () => {
+          setmaterial(reader.result.slice(reader.result.indexOf(",") + 1));
+        };
+      } else if (file.target.files[0].type == "application/pdf") {
+        setFileType("pdf");
+        reader.onloadend = () => {
+          setmaterial(reader.result.slice(reader.result.indexOf(",") + 1));
+        };
+      } else if (
+        file.target.files[0].type ==
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+      ) {
+        setFileType("docx");
+        reader.onloadend = () => {
+          setmaterial(reader.result.slice(reader.result.indexOf(",") + 1));
+        };
+      } else if (file.target.files[0].type == "image/jpeg") {
+        setFileType("jpeg");
+        reader.onloadend = () => {
+          setmaterial(reader.result.slice(reader.result.indexOf(",") + 1));
+        };
+      } else if (file.target.files[0].type == "image/png") {
+        setFileType("png");
+        reader.onloadend = () => {
+          setmaterial(reader.result.slice(reader.result.indexOf(",") + 1));
+        };
+      } else {
+        Swal.fire({
+          icon: "warning",
+          title: "Please Enter File Formats Of Txt, Pdf, Ppt, Docs, Jpeg",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      }  
   };
 
   const handleChange = async (e) => {
