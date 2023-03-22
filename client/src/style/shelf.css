@@ -6,31 +6,34 @@
 } */
 
 
-.library {
-  /* The image used */
-  background-color: aliceblue;
-  position: relative;
-  /* Full height */
+.main{
+  height: 300vh;
+}
+
+.library{
+  background-image: url("../images/bg.jpeg");
   height: 100%;
   width: 100%;
-
-  /* Center and scale the image nicely */
+  background-position: center;
+  box-sizing: border-box;
+  position: relative;
 }
 
 .shelf {
   /* The image used */
-  background-image: url("../images/shelf.jpeg");
-  height: 55%;
-  width: 90%;
+  background-image: url("../images/s.png");
+  height: 15%; 
+  width: 106rem;
   position: relative;
   z-index: 9;
   background-position: center;
   background-repeat: no-repeat;
   background-size: contain;
-  left: 4vw;
-  top: 50vh;
+  left: 7vw;
+  top: 30vh;
   margin-bottom: 30vh;
 }
+
 .container,
 .card,
 .card_front,
@@ -38,7 +41,7 @@
   width: 15vw;
   position: relative;
   top: -12vh;
-  left: 8vw;
+  left: 7.3vw;
   height: 23vw;
   perspective: 100vw;
   float: left;
@@ -62,11 +65,12 @@
 
 .card_front {
   position: relative;
-  background-image: url("../images/book.jpeg");
+  background-image: url("../images/ok.png");
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-  object-fit: fill;
+  object-fit: contain;
+  
 }
 
 .card_back {
@@ -85,11 +89,11 @@
   line-height: 1.2;
 }
 
-/* p:first-of-type {
+.card p:first-of-type {
   margin-top: 0;
   font-size: 2vh;
   border-top: 8px solid #333;
-} */
+} 
 
 /* FLIP CARD STYLING */
 .container {

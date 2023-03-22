@@ -12,14 +12,15 @@
   border: none;
 }
 
+
 .bg-image {
   background-image: url("./images/img1\ .png");
   height: 50rem;
 }
 
-.shelf_bg {
+.shelf-bg {
   background-image: url("./images/bg.jpeg");
-  height: 100%;
+  height: 50rem;
 }
 
 .bg-image img {
