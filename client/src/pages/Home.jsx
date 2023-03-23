@@ -12,6 +12,7 @@ pdfjsLib.GlobalWorkerOptions.workerSrc =
   "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js";
 
 function Home() {
+  const [cint, setcint] = useState(0);
   const [file, setFile] = useState({});
   const [textValue, setTextValue] = useState("");
   const navigate = useNavigate();
@@ -98,47 +99,46 @@ function Home() {
     reader.readAsDataURL(file.target.files[0]);
     if (file.target.files[0].type == "text/plain") {
       setFileType("txt");
-      setmaterial("")      
+      setmaterial("");
+    } else if (
+      file.target.files[0].type ==
+      "application/vnd.openxmlformats-officedocument.presentationml.presentation"
+    ) {
+      setFileType("pptx");
+      reader.onloadend = () => {
+        setmaterial(reader.result.slice(reader.result.indexOf(",") + 1));
+      };
+    } else if (file.target.files[0].type == "application/pdf") {
+      setFileType("pdf");
+      reader.onloadend = () => {
+        setmaterial(reader.result.slice(reader.result.indexOf(",") + 1));
+      };
+    } else if (
+      file.target.files[0].type ==
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    ) {
+      setFileType("docx");
+      reader.onloadend = () => {
+        setmaterial(reader.result.slice(reader.result.indexOf(",") + 1));
+      };
+    } else if (file.target.files[0].type == "image/jpeg") {
+      setFileType("jpeg");
+      reader.onloadend = () => {
+        setmaterial(reader.result.slice(reader.result.indexOf(",") + 1));
+      };
+    } else if (file.target.files[0].type == "image/png") {
+      setFileType("png");
+      reader.onloadend = () => {
+        setmaterial(reader.result.slice(reader.result.indexOf(",") + 1));
+      };
+    } else {
+      Swal.fire({
+        icon: "warning",
+        title: "Please Enter File Formats Of Txt, Pdf, Ppt, Docs, Jpeg",
+        showConfirmButton: false,
+        timer: 1500,
+      });
     }
-    else if (
-        file.target.files[0].type ==
-        "application/vnd.openxmlformats-officedocument.presentationml.presentation"
-      ) {
-        setFileType("pptx");
-        reader.onloadend = () => {
-          setmaterial(reader.result.slice(reader.result.indexOf(",") + 1));
-        };
-      } else if (file.target.files[0].type == "application/pdf") {
-        setFileType("pdf");
-        reader.onloadend = () => {
-          setmaterial(reader.result.slice(reader.result.indexOf(",") + 1));
-        };
-      } else if (
-        file.target.files[0].type ==
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-      ) {
-        setFileType("docx");
-        reader.onloadend = () => {
-          setmaterial(reader.result.slice(reader.result.indexOf(",") + 1));
-        };
-      } else if (file.target.files[0].type == "image/jpeg") {
-        setFileType("jpeg");
-        reader.onloadend = () => {
-          setmaterial(reader.result.slice(reader.result.indexOf(",") + 1));
-        };
-      } else if (file.target.files[0].type == "image/png") {
-        setFileType("png");
-        reader.onloadend = () => {
-          setmaterial(reader.result.slice(reader.result.indexOf(",") + 1));
-        };
-      } else {
-        Swal.fire({
-          icon: "warning",
-          title: "Please Enter File Formats Of Txt, Pdf, Ppt, Docs, Jpeg",
-          showConfirmButton: false,
-          timer: 1500,
-        });
-      }  
   };
 
   const handleChange = async (e) => {
@@ -160,44 +160,90 @@ function Home() {
 
   return (
     <div>
-      <div className=" w-100% bg-image py-10 px-44 my-4">
-        <div className="flex ">
-         
-          <div className=" w-full py-60 p-4 ml-4 xl:ml-16 md:w-1/2 ">
-            <h1 className="text-4xl md:text-5xl xl:text-6xl ">
-            Audio book for your kids</h1>
-            <h1 className=" text-lg md:text-xl xl:text-2xl pt-3">
-              Make learning alot of fun by listening the book.
-            </h1>
-            <h1 className="text-xl mb-4">
-              Convert the pdf, text or word files into audio.
-            </h1>
-
-            <label className="text-md" htmlFor="file_input">
-              Upload file
-            </label>
-            <input
-              className="block w-full md:w-1/2  text-sm text-white p-1  border rounded-md cursor-pointer bg-gray-800	 dark:text-gray-400 focus:outline-none"
-              id="file_input"
-              type="file"
-              onChange={handleChange}
-            />
-            <p className="mt-1 text-sm" id="file_input_help">
-              txt or pdf.
-            </p>
-            <button
-              onClick={convertFile}
-              className="orange text-white px-6 py-3 mt-3 cursor-pointer rounded-lg"
-            >
-              Convert
-            </button>
-          </div>
-          {/* <img
-            className="w-96  object-cover bg-white"
-            src={homeImg}
-            alt="home"
-          /> */}
-        </div>
+      <div className=" w-100% bg-image py-10 my-4 flex justify-around">
+        {cint == 0 ? (
+          <>
+            
+              <div className=" w-full py-60 p-4 ml-4 xl:ml-16 md:w-3/4 flex flex-col items-center justify-center">
+                <h1 className="text-4xl md:text-5xl xl:text-6xl ">
+                  Audio book for your kids
+                </h1>
+                <h1 className=" text-lg md:text-xl xl:text-2xl pt-3">
+                  Make learning alot of fun by listening the book.
+                </h1>
+                <h1 className="text-xl mb-4">
+                  Convert the pdf, text or word files into audio.
+                </h1>
+              </div>
+              <div className="w-full py-60 p-4 ml-4 xl:ml-16 md:w-1/4 flex flex-col items-end justify-center relative">
+                <div className=" w-32 h-32 rounded-full absolute bg-yellow-200 blur-xl flex flex-col items-center justify-center"></div>
+                <button
+                  className="relative before:z-10 before:absolute before:-left-3 before:top-1/2 before:w-max before:max-w-xs before:-translate-x-full before:-translate-y-1/2 before:rounded-md before:bg-gray-700 before:px-3 before:py-2 before:text-white before:invisible before:content-[attr(data-tip)] after:z-10 after:absolute after:-left-[0.8rem] after:top-1/2 after:h-0 after:w-0 after:translate-x-0 after:-translate-y-1/2 after:border-8 after:border-l-gray-700 after:border-r-transparent after:border-b-transparent after:border-t-transparent after:invisible hover:before:visible hover:after:visible"
+                  data-tip="Explore" onClick={() => {setcint(1);}}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="w-32 h-32 hover:scale-105 cursor-pointer transition-all relative"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M11.25 4.5l7.5 7.5-7.5 7.5m-6-15l7.5 7.5-7.5 7.5"
+                    />
+                  </svg>
+                </button>
+              </div>
+              {/* <img
+  className="w-96  object-cover bg-white"
+  src={homeImg}
+  alt="home"
+/> */}
+          </>
+        ) : (
+          <>
+            
+              <div className=" w-full py-60 p-4 ml-4 xl:ml-16 md:w-3/4 flex flex-col items-center justify-center">
+                <label className="text-md" htmlFor="file_input">
+    Upload file
+  </label>
+  <input
+    className="block w-full md:w-1/2  text-sm text-white p-1  border rounded-md cursor-pointer bg-gray-800	 dark:text-gray-400 focus:outline-none"
+    id="file_input"
+    type="file"
+    onChange={handleChange}
+  />
+  <p className="mt-1 text-sm" id="file_input_help">
+    txt or pdf.
+  </p>
+  <button
+    onClick={convertFile}
+    className="orange text-white px-6 py-3 mt-3 cursor-pointer rounded-lg"
+  >
+    Convert
+  </button>
+              </div>
+              <div className="w-full py-60 p-4 ml-4 xl:ml-16 md:w-1/4 flex flex-col items-end justify-center relative">
+                <div className=" w-32 h-32 rounded-full absolute bg-yellow-200 blur-xl flex flex-col items-center justify-center"></div>
+                <button
+                  className="relative before:z-10 before:absolute before:-left-3 before:top-1/2 before:w-max before:max-w-xs before:-translate-x-full before:-translate-y-1/2 before:rounded-md before:bg-gray-700 before:px-3 before:py-2 before:text-white before:invisible before:content-[attr(data-tip)] after:z-10 after:absolute after:-left-[0.8rem] after:top-1/2 after:h-0 after:w-0 after:translate-x-0 after:-translate-y-1/2 after:border-8 after:border-l-gray-700 after:border-r-transparent after:border-b-transparent after:border-t-transparent after:invisible hover:before:visible hover:after:visible"
+                  data-tip="Explore" onClick={() => {setcint(0);}}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-32 h-32 hover:scale-105 cursor-pointer transition-all relative">
+  <path strokeLinecap="round" strokeLinejoin="round" d="M18.75 19.5l-7.5-7.5 7.5-7.5m-6 15L5.25 12l7.5-7.5" />
+</svg>
+                </button>
+              </div>
+              {/* <img
+  className="w-96  object-cover bg-white"
+  src={homeImg}
+  alt="home"
+/> */}
+          </>
+        )}
       </div>
 
       <div className=" bg-emerald-50	 rounded-lg p-7 mx-4 my-10 md:mx-10 xl:mx-40 ">

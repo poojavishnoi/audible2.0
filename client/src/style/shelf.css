@@ -29,7 +29,7 @@
   background-position: center;
   background-repeat: no-repeat;
   background-size: contain;
-  left: 7vw;
+  left: -4vw;
   top: 30vh;
   margin-bottom: 30vh;
 }
@@ -40,8 +40,8 @@
 .card_back {
   width: 15vw;
   position: relative;
-  top: -12vh;
-  left: 7.3vw;
+  top: -10vh;
+  left: 14.3vw;
   height: 23vw;
   perspective: 100vw;
   float: left;
