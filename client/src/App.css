@@ -1,0 +1,46 @@
+:root {
+  --orange-color: #f58468;
+  --yellow-color: #ffbd59;
+  --peacock-color: #648682;
+  --purple-shade: #dbb3a9;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  outline: none;
+  border: none;
+}
+
+
+.bg-image {
+  background-image: url("./images/img1\ .png");
+  height: 50rem;
+}
+
+.shelf-bg {
+  background-image: url("./images/bg.jpeg");
+  height: 50rem;
+}
+
+.bg-image img {
+  width: 24%;
+  height: 30%;
+  object-fit: cover;
+}
+
+.yellow {
+  background-color: var(--yellow-color);
+}
+
+.orange {
+  background-color: var(--orange-color);
+}
+
+.peacock {
+  background-color: var(--peacock-color);
+}
+
+.purple {
+  background-color: var(--purple-shade);
+}

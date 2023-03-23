@@ -9,6 +9,7 @@ import { validateUser } from "./api";
 import { actionType } from "./context/reducer";
 import Footer from "./components/Footer";
 import Header from "./components/Header";
+import PublicLibrary from "./pages/PublicLibrary";
 import SavedLibrary from "./pages/SavedLibrary";
 import Blog from "./pages/Blog";
 import Text from "./pages/legacy";
@@ -52,9 +53,10 @@ function App() {
           path="/login"
           element={<Login setAuthentication={setAuthentication} />}
         />
-        <Route path="/convertfile" element={<ConvertFile />} />
         <Route path="/*" element={<Home />} />
+        <Route path="/convertfile" element={<ConvertFile />} />
         <Route path="/savedlibrary" element={<SavedLibrary />} />
+        <Route path="/library" element={<PublicLibrary />} />
         <Route path="/blog" element={<Blog />} />
         <Route path="/legacy" element={<Text/>}/>
 
