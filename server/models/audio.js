@@ -25,7 +25,7 @@ const AudioSchema = mongoose.Schema({
   },
   listeners:{
     type: Array,
-    default: [{email: {type: String}, paused: {type: Number, default: 0}}]
+    default: [{email: {type: String}, paused: {type: String, default: "0"}}]
   },
   audio: {
     type: String,

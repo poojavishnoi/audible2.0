@@ -1,4 +1,5 @@
 const router = require('express').Router()
+const { log } = require('console');
 const multer = require('multer');
 const { listeners } = require('../models/audio');
 const upload = multer();
@@ -57,17 +58,15 @@ router.post("/save", upload.fields([{ name: 'audio', maxCount: 1 }, { name: 'srt
   // }
 })
 
-router.get("/getcreated/:email", async(req,res) => {
+router.get("/getOwn/:email", async(req,res) => {
   const filter = {author_email: req.params.email}
   const options = {
+    _id: true,
     file_name: true,
     image: true,
     author_email: true,
     visibility: true,
     listeners: true,
-    srt: true,
-    audio: true,
-    text: true,
   }
   const data = await Audio.find(filter, options)
   if(data){
@@ -78,16 +77,14 @@ router.get("/getcreated/:email", async(req,res) => {
 })
 
 router.get("/getLibrary/:email", async(req,res) => {
-  const filter = {visibility: true, listeners: {$elemMatch: {author_email: req.params.email}}}
+  const filter = {visibility: true, listeners: {$elemMatch: {email: req.params.email}}}
   const options = {
+    _id: true,
     file_name: true,
     image: true,
     author_email: true,
     visibility: true,
     listeners: true,
-    srt: true,
-    audio: true,
-    text: true,
   }
 
   const data = await Audio.find(filter, options);
@@ -99,21 +96,49 @@ router.get("/getLibrary/:email", async(req,res) => {
   }
 })
 
-router.put("/update/:id", async(req,res) => {
-  const filter = {_id : req.params.id}
+router.get("/getBook/:id", async(req,res) => {
+  const filter = {_id: req.params.id}
   const options = {
+    _id: true,
+    file_name: true,
+    image: true,
+    author_email: true,
+    visibility: true,
+    listeners: true,
+    srt: true,
+    audio: true,
+    text: true,
+  }
+  const data = await Audio.findById(filter, options)
+  if(data){
+    return res.status(200).send({success: true, audio:data})
+  }else{
+    return res.status(400).send({success:false, msg: 'Data not found'})
+  }
+})
+
+
+router.put("/updatePaused/:id", async(req,res) => {
+  console.log("req.body: ", req.body);
+  const filter = {_id : req.params.id, 'listeners.email': req.body.email}
+  const projection = {
+    _id: true,
+    file_name: true,
+    image: true,
+    author_email: true,
+    visibility: true,
+    listeners: true,
+  }
+  const options = {
+    projection,
     upsert:true,
     new: true
   }
-
   try {
-    const result = await song.findByIdAndUpdate(
+    const result = await Audio.findOneAndUpdate(
       filter,
       {
-        name: req.body.name,
-        imageURL :req.body.imageURL,
-        audioURL: req.body.audioURL,
-        audioDuration: req.body.audioDuration 
+        $set: {"listeners.$.paused": req.body.paused}
       },
       options
     )
@@ -124,9 +149,67 @@ router.put("/update/:id", async(req,res) => {
   }
 })
 
-router.delete("/delete/:id", async(req,res) => {
+router.put("/addListeners/:id", async(req,res) => {
   const filter = {_id : req.params.id}
-  const result = await song.deleteOne(filter)
+  const projection = {
+    _id: true,
+    file_name: true,
+    image: true,
+    author_email: true,
+    visibility: true,
+    listeners: true,
+  }
+  const options = {
+    projection,
+    upsert:true,
+    new: true
+  }
+  try {
+    const result = await Audio.findByIdAndUpdate(
+      filter,
+      {
+        $addToSet: {listeners: req.body.listeners}
+      },
+      options
+    )
+    return res.status(200).send({success: true, data : result})
+  } catch (error) {
+    return res.status(400).send({success:false, msg:error})
+  }
+})
+
+router.put("/updateVisibility/:id", async(req,res) => {
+  const filter = {_id : req.params.id}
+  const projection = {
+    _id: true,
+    file_name: true,
+    image: true,
+    author_email: true,
+    visibility: true,
+    listeners: true,
+  }
+  const options = {
+    projection,
+    upsert:true,
+    new: true
+  }
+  try {
+    const result = await Audio.findByIdAndUpdate(
+      filter,
+      {
+        visibility: req.body.visibility
+      },
+      options
+    )
+    return res.status(200).send({success: true, data : result})
+  } catch (error) {
+    return res.status(400).send({success:false, msg:error})
+  }
+})
+
+router.delete("/deleteAudio/:id", async(req,res) => {
+  const filter = {_id : req.params.id}
+  const result = await Audio.deleteOne(filter)
   if(result){
     return res.status(200).send({success: true, msg: "Data deleted successfully", data: result})
   }else{
