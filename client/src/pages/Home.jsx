@@ -18,6 +18,18 @@ function Home() {
   const navigate = useNavigate();
   const [imgUrl, setImgUrl] = useState("");
   const [FileType, setFileType] = useState("");
+  const [preview, setPreview] = useState(false);
+  const [showDropDown, setShowDropDown] = useState(false);
+  const imgUrls = ['First','Fourth']
+  const [current, setCurrent] = useState(0)
+  const prev = () => {
+      setCurrent(current === 0 ? imgUrls.length - 1 : current - 1)
+      setImgUrl(imgUrl)
+  }
+  const next = () => {
+      setCurrent(current === imgUrls.length - 1 ? 0 : current + 1)
+      setImgUrl(imgUrl)
+  }
 
   const convertFile = async () => {
     if (
@@ -156,98 +168,203 @@ function Home() {
       reader.onerror = (e) => alert(e.target.error.name);
       reader.readAsText(file);
     }
+    setPreview(true);
   };
 
   return (
     <div>
-      <div className=" w-100% bg-image py-10 my-4 flex justify-around">
+      <div className=" w-100% bg-image py-10 my-4 flex justify-around items-center">
         {cint == 0 ? (
           <>
-            
-              <div className=" w-full py-60 p-4 ml-4 xl:ml-16 md:w-3/4 flex flex-col items-center justify-center">
-                <h1 className="text-4xl md:text-5xl xl:text-6xl ">
-                  Audio book for your kids
-                </h1>
-                <h1 className=" text-lg md:text-xl xl:text-2xl pt-3">
-                  Make learning alot of fun by listening the book.
-                </h1>
-                <h1 className="text-xl mb-4">
-                  Convert the pdf, text or word files into audio.
-                </h1>
-              </div>
-              <div className="w-full py-60 p-4 ml-4 xl:ml-16 md:w-1/4 flex flex-col items-end justify-center relative">
-                <div className=" w-32 h-32 rounded-full absolute bg-yellow-200 blur-xl flex flex-col items-center justify-center"></div>
-                <button
-                  className="relative before:z-10 before:absolute before:-left-3 before:top-1/2 before:w-max before:max-w-xs before:-translate-x-full before:-translate-y-1/2 before:rounded-md before:bg-gray-700 before:px-3 before:py-2 before:text-white before:invisible before:content-[attr(data-tip)] after:z-10 after:absolute after:-left-[0.8rem] after:top-1/2 after:h-0 after:w-0 after:translate-x-0 after:-translate-y-1/2 after:border-8 after:border-l-gray-700 after:border-r-transparent after:border-b-transparent after:border-t-transparent after:invisible hover:before:visible hover:after:visible"
-                  data-tip="Explore" onClick={() => {setcint(1);}}
+            <div className=" w-full py-60 p-4 ml-4 xl:ml-16 md:w-3/4 flex flex-col items-center justify-center">
+              <h1 className="text-4xl md:text-5xl xl:text-6xl ">
+                Audio book for your kids
+              </h1>
+              <h1 className=" text-lg md:text-xl xl:text-2xl pt-3">
+                Make learning alot of fun by listening the book.
+              </h1>
+              <h1 className="text-xl mb-4">
+                Convert the pdf, text or word files into audio.
+              </h1>
+            </div>
+            <div className="w-full py-60 p-4 ml-4 xl:ml-16 md:w-1/4 flex flex-col items-end justify-center relative">
+              <div className=" w-32 h-32 rounded-full absolute bg-yellow-200 blur-xl flex flex-col items-center justify-center"></div>
+              <button
+                className="relative before:z-10 before:absolute before:-left-3 before:top-1/2 before:w-max before:max-w-xs before:-translate-x-full before:-translate-y-1/2 before:rounded-md before:bg-gray-700 before:px-3 before:py-2 before:text-white before:invisible before:content-[attr(data-tip)] after:z-10 after:absolute after:-left-[0.8rem] after:top-1/2 after:h-0 after:w-0 after:translate-x-0 after:-translate-y-1/2 after:border-8 after:border-l-gray-700 after:border-r-transparent after:border-b-transparent after:border-t-transparent after:invisible hover:before:visible hover:after:visible"
+                data-tip="Explore"
+                onClick={() => {
+                  setcint(1);
+                }}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="w-32 h-32 hover:scale-105 cursor-pointer transition-all relative"
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={1.5}
-                    stroke="currentColor"
-                    className="w-32 h-32 hover:scale-105 cursor-pointer transition-all relative"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M11.25 4.5l7.5 7.5-7.5 7.5m-6-15l7.5 7.5-7.5 7.5"
-                    />
-                  </svg>
-                </button>
-              </div>
-              {/* <img
-  className="w-96  object-cover bg-white"
-  src={homeImg}
-  alt="home"
-/> */}
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M11.25 4.5l7.5 7.5-7.5 7.5m-6-15l7.5 7.5-7.5 7.5"
+                  />
+                </svg>
+              </button>
+            </div>
           </>
         ) : (
           <>
+          <div className="w-full p-4 md:w-3/4 flex items-center justify-center flex-1 mr-48" >
+            {!preview? <div className=" w-full flex flex-col items-center justify-center flex-1">
+              <label className="text-md" htmlFor="file_input">
+                Upload file
+              </label>
+              <input
+                className="block w-full md:w-1/2  text-sm text-white p-1 border rounded-md cursor-pointer bg-gray-800 dark:text-gray-400 focus:outline-none"
+                id="file_input"
+                type="file"
+                onChange={handleChange}
+              />
+              <p className="mt-1 text-sm" id="file_input_help">
+                txt or pdf.
+              </p>
+            </div> : <div className="flex flex-col"> 
+          <div className="relative text-left inline-block w-fit">
+                <div className="flex items-center justify-center">
+                    <button
+                        onClick={() => {
+                            setShowDropDown(!showDropDown);
+                        }}
+                        className="inline-flex w-full justify-between items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-xs sm:text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100"
+                    >
+                        <img className=" !rounded-3xl !w-72  !object-contain my-10 !h-[45%] !flex-1" src={imgUrl} alt="img" />
+                        {showDropDown ? (
+                            ""
+                        ) : (
+                            <svg
+                                className="-mr-1 ml-2 h-5 w-5"
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 20 20"
+                                fill="currentColor"
+                                aria-hidden="true"
+                            >
+                                <path
+                                    fill-rule="evenodd"
+                                    d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+                                    clip-rule="evenodd"
+                                />
+                            </svg>
+                        )}
+                    </button>
+                </div>
+                {showDropDown ? (
+                    <div className="animate-slide-out transition-all duration-10000 flex items-center absolute bg-white top-0 left-[101%] z-10  w-full h-full origin-top-right rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                        <button onClick={prev} className='mx-1 p-2 rounded-full bg-gray-400'>
+                            <svg
+                                className="h-5 w-5"
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 20 20"
+                                fill="currentColor"
+                                aria-hidden="true"
+                            >
+                                <path
+                                    fill-rule="evenodd"
+                                    d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+                                    clip-rule="evenodd"
+                                />
+                            </svg>
+                        </button>
+                        <div className="flex relative overflow-hidden">
+                            <div className="relative flex transition-transform ease-out duration-500" style={{ transform: `translateX(-${current * 100}%)` }}>
+                                {
+                                    imgUrls.map((value, x) => (
+                                        <img className=" !rounded-3xl !w-full  !object-contain  !h-[100%] !flex-1" src={`/book_cover/${value}.jpg`} alt="img" onClick={() => { setImgUrl(`/book_cover/${value}.jpg`); setShowDropDown(!showDropDown) }} />
+
+                                    ))
+                                }
+                            </div>
+                            <div className='absolute bottom-4 right-0 left-0'>
+                                <div className='flex items-center justify-center gap-2'>
+
+                                    {
+                                        imgUrls.map((value, x) => (
+                                            <div className={`transition-all w-3 h-3 bg-white rounded-full ${current === x ? "p-2" : "bg-opacity-50"}`}>
+                                            </div>
+                                        ))
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <button onClick={next} className='mx-1 p-2 rounded-full bg-gray-400'>
+                            <svg
+                                className="h-5 w-5"
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 20 20"
+                                fill="currentColor"
+                                aria-hidden="true"
+                            >
+                                <path
+                                    fill-rule="evenodd"
+                                    d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+                                    clip-rule="evenodd"
+                                />
+                            </svg>
+                        </button>
+                    </div>
+                ) : (
+                    ""
+                )}
+            </div>
+            <div className="flex items-center justify-around">
+            <button
+                onClick={()=>{setPreview(!preview)}}
+                className="orange text-white px-6 py-3 mt-3 cursor-pointer rounded-lg"
+              >
+                Back
+              </button>
+              <button
+                onClick={convertFile}
+                className="orange text-white px-6 py-3 mt-3 cursor-pointer rounded-lg"
+              >
+                Upload
+              </button>
+            </div>
             
-              <div className=" w-full py-60 p-4 ml-4 xl:ml-16 md:w-3/4 flex flex-col items-center justify-center">
-                <label className="text-md" htmlFor="file_input">
-    Upload file
-  </label>
-  <input
-    className="block w-full md:w-1/2  text-sm text-white p-1  border rounded-md cursor-pointer bg-gray-800	 dark:text-gray-400 focus:outline-none"
-    id="file_input"
-    type="file"
-    onChange={handleChange}
-  />
-  <p className="mt-1 text-sm" id="file_input_help">
-    txt or pdf.
-  </p>
-  <button
-    onClick={convertFile}
-    className="orange text-white px-6 py-3 mt-3 cursor-pointer rounded-lg"
-  >
-    Convert
-  </button>
-              </div>
-              <div className="w-full py-60 p-4 ml-4 xl:ml-16 md:w-1/4 flex flex-col items-end justify-center relative">
-                <div className=" w-32 h-32 rounded-full absolute bg-yellow-200 blur-xl flex flex-col items-center justify-center"></div>
-                <button
-                  className="relative before:z-10 before:absolute before:-left-3 before:top-1/2 before:w-max before:max-w-xs before:-translate-x-full before:-translate-y-1/2 before:rounded-md before:bg-gray-700 before:px-3 before:py-2 before:text-white before:invisible before:content-[attr(data-tip)] after:z-10 after:absolute after:-left-[0.8rem] after:top-1/2 after:h-0 after:w-0 after:translate-x-0 after:-translate-y-1/2 after:border-8 after:border-l-gray-700 after:border-r-transparent after:border-b-transparent after:border-t-transparent after:invisible hover:before:visible hover:after:visible"
-                  data-tip="Explore" onClick={() => {setcint(0);}}
+            </div>}
+          </div>
+            <div className="w-full py-60 p-4 ml-4 xl:ml-16 md:w-1/4 flex flex-col items-end justify-center relative">
+              <div className=" w-32 h-32 rounded-full absolute bg-yellow-200 blur-xl flex flex-col items-center justify-center"></div>
+              <button
+                className="relative before:z-10 before:absolute before:-left-3 before:top-1/2 before:w-max before:max-w-xs before:-translate-x-full before:-translate-y-1/2 before:rounded-md before:bg-gray-700 before:px-3 before:py-2 before:text-white before:invisible before:content-[attr(data-tip)] after:z-10 after:absolute after:-left-[0.8rem] after:top-1/2 after:h-0 after:w-0 after:translate-x-0 after:-translate-y-1/2 after:border-8 after:border-l-gray-700 after:border-r-transparent after:border-b-transparent after:border-t-transparent after:invisible hover:before:visible hover:after:visible"
+                data-tip="Explore"
+                onClick={() => {
+                  setcint(0);
+                }}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="w-32 h-32 hover:scale-105 cursor-pointer transition-all relative"
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-32 h-32 hover:scale-105 cursor-pointer transition-all relative">
-  <path strokeLinecap="round" strokeLinejoin="round" d="M18.75 19.5l-7.5-7.5 7.5-7.5m-6 15L5.25 12l7.5-7.5" />
-</svg>
-                </button>
-              </div>
-              {/* <img
-  className="w-96  object-cover bg-white"
-  src={homeImg}
-  alt="home"
-/> */}
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M18.75 19.5l-7.5-7.5 7.5-7.5m-6 15L5.25 12l7.5-7.5"
+                  />
+                </svg>
+              </button>
+            </div>
+            
           </>
         )}
       </div>
 
       <div className=" bg-emerald-50	 rounded-lg p-7 mx-4 my-10 md:mx-10 xl:mx-40 ">
-        <h1 className="text-xl">Blog you might want to read</h1>
+        <h1 className="text-xl">Blogs you might want to read</h1>
 
         <div className=" flex flex-wrap justify-center mt-4">
           <div className=" rounded-md overflow-hidden relative w-80  m-5 bg-white">
