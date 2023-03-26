@@ -20,6 +20,8 @@ function Listen() {
   const [audioBook, setBooks] = useState([])
   const [loading, setLoading] = useState(true)
 
+
+
   const {
     state: { id },
   } = useLocation();
@@ -110,7 +112,7 @@ function Listen() {
       <div className=" text-white rounded-3xl mx-10 ok mt-4 w-11/12 h-full px-10">
         <div className="  justify-center">
           {/* {url && srt && ( */}
-            <NewFlipBook audioSrc={audioBook.audio.audio} subtitleSrc={audioBook.audio.srt} />
+            <NewFlipBook audioSrc={audioBook?.audio?.audio} subtitleSrc={audioBook?.audio?.srt} />
           {/* )} */}
         </div>
         {/*}

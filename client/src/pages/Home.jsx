@@ -8,12 +8,9 @@ import { useNavigate } from "react-router";
 import Swal from "sweetalert2";
 import PizZip from "pizzip";
 import Docxtemplater from "docxtemplater";
-
-import { Document, Packer } from 'docx';
-
 import { AnimatePresence, motion } from 'framer-motion';
-
 import * as pdfjsLib from "pdfjs-dist";
+
 pdfjsLib.GlobalWorkerOptions.workerSrc =
   "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js";
 

@@ -5,6 +5,8 @@ import "react-h5-audio-player/lib/styles.css";
 import FlipPage from "react-flip-page";
 
 export default function NewFlipBook({audioSrc, subtitleSrc }) {
+
+  console.log(audioSrc, "audioSrc");
   const audioRef = useRef(null);
   const [subtitles, setSubtitles] = useState([]);
   const [currentSubtitleIndex, setCurrentSubtitleIndex] = useState(-1);
