@@ -54,7 +54,7 @@ function Header() {
       initial={{opacity: 0, y:50}}
       animate={{opacity: 1, y: 0}}
       exit={{opacity:0, y:50}}
-      className="absolute z-10 flex flex-col p-3 gap-2 top-14 right-0 w-96 cursor-pointer bg-gray-50 shadow-lg rounded-lg backdrop-blur-sm">
+      className="absolute z-50 flex flex-col p-3 gap-2 top-14 right-0 w-96 cursor-pointer bg-gray-50 shadow-lg rounded-lg backdrop-blur-sm">
       <NavLink to={'/userProfile'}>
         <p className=' text-base text-gray-600 hover:font-semibold duration-150 transition-all ease-in-out'>Profile</p>
       </NavLink>
