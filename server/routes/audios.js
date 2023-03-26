@@ -76,8 +76,28 @@ router.get("/getOwn/:email", async(req,res) => {
   }
 })
 
-router.get("/getLibrary/:email", async(req,res) => {
+router.get("/getPersonalLibrary/:email", async(req,res) => {
   const filter = {visibility: true, listeners: {$elemMatch: {email: req.params.email}}}
+  const options = {
+    _id: true,
+    file_name: true,
+    image: true,
+    author_email: true,
+    visibility: true,
+    listeners: true,
+  }
+
+  const data = await Audio.find(filter, options);
+
+  if(data){
+    return res.status(200).send({success: true, audio: data})
+  }else{
+    return res.status(400).send({success: false, msg: "Data not found"})
+  }
+})
+
+router.get("/getPublicLibrary", async(req,res) => {
+  const filter = {visibility: true}
   const options = {
     _id: true,
     file_name: true,
