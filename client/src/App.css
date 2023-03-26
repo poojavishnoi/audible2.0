@@ -12,25 +12,62 @@
   border: none;
 }
 
-
 .bg-image {
   background-image: url("./images/img1\ .png");
-  height: 50rem;
+  height: 100%;
+}
+
+.bg2-image{
+  background-image: url("./images/bg2.png");
+  object-fit: contain;
+  height: 100%;
+  width: 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;  
 }
 
 .shelf-bg {
   background-image: url("./images/bg.jpeg");
-  height: 50rem;
+  height: 100%;
 }
 
-.bg-image img {
-  width: 24%;
+.bg-image .ok {
+  width: 90rem;
   height: 30%;
   object-fit: cover;
 }
 
+.flip{
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
+}
+
+.right_image{
+  height: 720px;
+  width: 50%;
+  box-shadow: -5px 0px 10px 1px #aaaaaa;
+  padding-left: 9.5rem;
+}
+
 .yellow {
   background-color: var(--yellow-color);
+}
+
+.text-yellow {
+  color: var(--yellow-color);
+}
+
+.text-orange{
+  color: var(--orange-color);
+}
+
+.text-peacock{
+  color: var(--peacock-color);
+}
+
+.text-purple{
+  color: var(--purple-shade);
 }
 
 .orange {

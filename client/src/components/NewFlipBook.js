@@ -1,163 +1,212 @@
-import React, { useEffect } from "react";
-import HTMLFlipBook from "react-pageflip";
-// import "./styles.scss";
-import "../style/flipbook.css";
+import Music from "../audio.mp3";
+import React, { useState, useEffect, useRef } from "react";
+import ReactAudioPlayer from "react-h5-audio-player";
+import "react-h5-audio-player/lib/styles.css";
+import FlipPage from "react-flip-page";
 
-console.log(HTMLFlipBook);
-const PageCover = React.forwardRef((props, ref) => {
-  return (
-    <div
-      className={"page page-cover page-cover-" + props.pos}
-      ref={ref}
-      data-density="hard"
-    >
-      <div className="page-content">
-        <h2>{props.children}</h2>
-      </div>
-    </div>
-  );
-});
+export default function NewFlipBook({audioSrc, subtitleSrc }) {
+  const audioRef = useRef(null);
+  const [subtitles, setSubtitles] = useState([]);
+  const [currentSubtitleIndex, setCurrentSubtitleIndex] = useState(-1);
+  const [pages, setPages] = useState([]);
+  const [time, setTime] = useState(0);
+  const characterLimit = 600;
 
-const Page = React.forwardRef((props, ref) => {
-  return (
-    <div className="page" ref={ref} data-density={props.density | "soft"}>
-      <div className="page-content">
-        <h2 className="page-header">Page header - {props.number}</h2>
-        
-        <div
-          className="page-image"
-          style={{ backgroundImage: "url(images/html/" + props.image + ")" }}
-        ></div>
-        <div className="page-text">{props.children}</div>
-        <div className="page-footer">{props.number + 1}</div>
-      </div>
-    </div>
-  );
-});
+    const [audioStarted, setAudioStarted] = useState(false);
 
-export default class Hehe extends React.Component {
-  constructor(props) {
-    super(props);
+  const [pageCover, setPageCover] = useState(true);
 
-    const pages = [<PageCover key={0} pos="top"></PageCover>];
+  useEffect(() => {
+    if (typeof subtitleSrc !== "object") {
+      // // Parse the SRT file into an array of subtitle objects
+      // const subtitles = subtitleSrc.trim()
+      //   .split(/\n\s*\n/)
 
-    let pageNum = 0;
-    for (let i = 0; i < 100; i++) {
-      pageNum++;
-      if (pageNum > 8) pageNum = 1;
-      pages.push(
-        <Page key={i + 1} image={pageNum + ".jpg"} number={i + 1}>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. In cursus
-          mollis nibh, non convallis ex convallis eu. Suspendisse potenti.
-          Aenean vitae pellentesque erat. Integer non tristique quam.
-          Suspendisse rutrum, augue ac sollicitudin mollis, eros velit viverra
-          metus, a venenatis tellus tellus id magna. Aliquam ac nulla rhoncus,
-          mollis, eros velit viverra metus, a venenatis tellus tellus id magna.
-        </Page>
-      );
+      fetch(subtitleSrc)
+        .then((response) => response.text())
+        .then((data) => {
+          // Parse the SRT file into an array of subtitle objects
+          const subtitles = data
+            .trim()
+            .split("\n\n")
+            .map((subtitle) => {
+              const [index, time, text] = subtitle?.split("\n");
+              return {
+                index,
+                start: TimeInDecimal(time?.split(" --> ")[0]),
+                end: TimeInDecimal(time?.split(" --> ")[1]),
+                text,
+              };
+            });
+
+          setSubtitles(subtitles);
+        });
     }
 
-    pages.push(
-      <PageCover key={101} pos="bottom">
-        THE END
-      </PageCover>
-    );
+  },[]);
 
-    this.state = {
-      page: 0,
-      totalPage: 0,
-      orientation: "landscape",
-      state: "read",
-      pages: pages
-    };
+useEffect(() => { 
+  subtitles? pageDistribution() : <>  </>
+}, [subtitles]);
+
+  useEffect(() => {
+    console.log("ok");
+
+    for (let index = 0; index < pages.length; index++) {
+      if (time > pages[index].content.slice(-1)[0].end) {
+        console.log("nice1");
+        audioRef.current.gotoNextPage();
+      }
+      if (time < pages[index].content[0].start) {
+        console.log("nice2");
+        audioRef.current.gotoPreviousPage();
+      }
+    }
+  }, [time, pages]);
+
+
+  const pageDistribution = () => {
+    var pageArray = [];
+    var subtitleIndex = 0;
+    var pageCount = 0;
+
+    while (subtitles.length > subtitleIndex) {
+      var pageFilled = 0;
+      var content = [];
+
+      while (characterLimit >= pageFilled && subtitles.length > subtitleIndex) {
+        console.log(subtitles[subtitleIndex].text.length, "subtitle length");
+        if (
+          subtitles[subtitleIndex].text.length + pageFilled <
+          characterLimit
+        ) {
+          pageFilled += subtitles[subtitleIndex].text.length;
+
+          content.push(subtitles[subtitleIndex]);
+
+          subtitleIndex++;
+        } else {
+          break;
+        }
+      }
+
+      pageArray.push({
+        pageCount,
+        content,
+      });
+
+      pageCount++;
+      console.log(pageArray, "pageArray");
+    }
+    setPages(pageArray);
+  };
+
+
+  const TimeInDecimal = (time) => {
+
+    const timeString = time;
+    const [hours, minutes, seconds] = timeString?.split(":");
+    const milliseconds = parseInt(timeString.split(",")[1]);
+    const totalSeconds = parseInt(seconds) + parseInt(minutes) * 60 + parseInt(hours) * 3600;
+    const timeInSeconds = totalSeconds + milliseconds / 1000;
+
+    return timeInSeconds;
+  };
+
+
+  const handleAudioTimeUpdate = (event) => {
+
+    const currentTime = event.target.currentTime;
+    setTime(currentTime);
+    
+    const newSubtitleIndex = subtitles.findIndex((subtitle) => {
+      return subtitle.start <= currentTime && subtitle.end >= currentTime;
+    });
+
+    if (newSubtitleIndex !== currentSubtitleIndex) {
+      setCurrentSubtitleIndex(newSubtitleIndex);
+    }
+
+  };
+
+  if (!subtitles) {
+    return <div>Loading subtitles...</div>;
   }
 
 
+  const currentSubtitle = subtitles[currentSubtitleIndex];
 
-  nextButtonClick = () => {
-    this.flipBook.getPageFlip().flipNext();
-  };
+  return (
+    <div className=" flex flex-col items-center mx-10 pb-10  h-full relative rounded-md  pt-5">
+      <ReactAudioPlayer
+        ref={audioRef}
+        current
+        onListen={handleAudioTimeUpdate}
+        src={audioSrc}
+        className="mb-5 w-full "
+        controls
+      />
+      <FlipPage
+        ref={audioRef}
+        flipOnTouchZone={0.8}
+        uncutPages={true}
+        orientation="horizontal"
+        width={1400}
+        className="flip"
+        style={{
+          backgroundColor: "rgba(0, 0, 0, 0.4)",
+          padding: "0",
+          margin: " 0 40px",
+        }}
+        showTouchHint
+        height={720}
+        animationDuration="1000"
+      >
+        
+       
+<div className="absolute right_image left-1/2 top-0 ">
+  <img
+    className="object-contain object-center h-full pt-5 pb-5"
+    src="https://images.pexels.com/photos/3662839/pexels-photo-3662839.jpeg?auto=compress&cs=tinysrgb&w=1600"
+    alt=""
+  />
+</div>      
 
-  prevButtonClick = () => {
-    this.flipBook.getPageFlip().flipPrev();
-  };
-
-  onPage = (e) => {
-    this.setState({
-      page: e.data
-    });
-  };
-
-  onChangeOrientation = (e) => {
-    this.setState({
-      orientation: e.data
-    });
-  };
-
-  onChangeState = (e) => {
-    this.setState({
-      state: e.data
-    });
-  };
-
-  componentDidMount() {
-    this.setState({
-      totalPage: this.flipBook.getPageFlip().getPageCount()
-    });
-  }
-
-  render() {
-    return (
-      <div>
-        <div className="container-md" style={{ position: "relative" }}>
-          <HTMLFlipBook
-            width={550}
-            height={733}
-            size="stretch"
-            minWidth={115}
-            maxWidth={2000}
-            minHeight={100}
-            maxHeight={2533}
-            maxShadowOpacity={0.5}
-            showCover={true}
-            mobileScrollSupport={true}
-            onFlip={this.onPage}
-            onChangeOrientation={this.onChangeOrientation}
-            onChangeState={this.onChangeState}
-            className="flip-book html-book demo-book"
-            ref={(el) => (this.flipBook = el)}
+        {pages.map((page, pindex) => (
+          <article
+            key={pindex}
+            className="p-7 relative text-center flex flex-col text-black "
           >
-            {this.state.pages}
-          </HTMLFlipBook>
-        </div>
+            {page.content.map((subtitle, index) => {
+              return (
+                <div className="w-1/2 text-left  ">
+                  <p
+                    key={index}
+                    className={`p-2 ${
+                      subtitle.text === currentSubtitle?.text
+                        ? "font-bold text-red-800 text-3xl"
+                        : "font-normal text-xl"
+                    }`}
+                  >
+                    {subtitle.text}
+                  </p>
+                </div>
+              );
+            })}
 
-        <div className="container mt-3">
-          <div className="row">
-            <div className="col-md-6">
-              <button
-                type="button"
-                className="btn btn-info btn-sm btn-prev"
-                onClick={this.prevButtonClick}
-              >
-                Previous page
-              </button>
-              [<span>{this.state.page + 1}</span> of{" "}
-              <span>{this.state.totalPage}</span>]
-              <button
-                type="button"
-                className="btn btn-info btn-sm btn-next"
-                onClick={this.nextButtonClick}
-              >
-                Next page
-              </button>
+            <div className="absolute right_image left-1/2 top-0 ">
+              <img
+                className="object-contain object-center h-full pt-5 pb-5"
+                src="https://images.pexels.com/photos/3662839/pexels-photo-3662839.jpeg?auto=compress&cs=tinysrgb&w=1600"
+                alt=""
+              />
             </div>
-            <div className="col-md-6">
-              State: <i>{this.state.state}</i>, orientation:{" "}
-              <i>{this.state.orientation}</i>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
+          </article>
+        ))}
+
+     
+
+      </FlipPage>
+    </div>
+  );
 }
