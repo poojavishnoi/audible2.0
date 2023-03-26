@@ -39,6 +39,15 @@ const AudioSchema = mongoose.Schema({
     type: String,
     required: true
   },
+  summary: {
+    type: String,
+    required: true
+  },
+  duration: {
+    type: String,
+    required: true
+  },
+
 
 },{
   timestamps: true

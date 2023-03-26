@@ -21,7 +21,7 @@ function Home() {
   const [FileType, setFileType] = useState("");
   const [preview, setPreview] = useState(false);
   const [showDropDown, setShowDropDown] = useState(false);
-  const imgUrls = ['First','Fourth']
+  const imgUrls = ['First','Second','Third','Fourth','Fifth','Sixth','Seventh','Eighth','Ninth']
   const [current, setCurrent] = useState(0)
   const prev = () => {
       setCurrent(current === 0 ? imgUrls.length - 1 : current - 1)
