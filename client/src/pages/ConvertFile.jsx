@@ -4,7 +4,6 @@ import { useStateValue } from "../context/StateProvider";
 import JSZip from "jszip";
 import axios from "axios";
 import { useState } from "react";
-import Music from "../audio.mp3";
 import { motion } from "framer-motion";
 import Dropdown from "../components/Dropdown";
 import NewFlipBook from "../components/NewFlipBook";
