@@ -11,6 +11,7 @@ export default function NewFlipBook({audioSrc, subtitleSrc }) {
   const [pages, setPages] = useState([]);
   const [time, setTime] = useState(0);
   const characterLimit = 600;
+  const [duration, setDuration] = useState(0);
 
   const [audioStarted, setAudioStarted] = useState(false);
   const [pageCover, setPageCover] = useState(true);
@@ -102,8 +103,6 @@ useEffect(() => {
     setPages(pageArray);
   };
 
-  console.log(pages, "pages");
-
 
   const TimeInDecimal = (time) => {
 
@@ -132,13 +131,15 @@ useEffect(() => {
 
   };
 
+
   if (!subtitles) {
     return <div>Loading subtitles...</div>;
   }
 
-  // const handlePlayAudio = () => {
-  //   audioRef.current.gotoNextPage()
-  // }
+  const handleLoadMetadata = (meta) => {
+    const {duration} = meta.target;
+    setDuration(duration);
+  }
 
   const currentSubtitle = subtitles[currentSubtitleIndex];
 
@@ -149,6 +150,7 @@ useEffect(() => {
         current
         onListen={handleAudioTimeUpdate}
         src={audioSrc}
+        onLoadedMetaData={handleLoadMetadata}
         className="mb-5 w-full "
         controls
       />
