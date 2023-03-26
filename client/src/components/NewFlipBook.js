@@ -12,8 +12,7 @@ export default function NewFlipBook({audioSrc, subtitleSrc }) {
   const [time, setTime] = useState(0);
   const characterLimit = 600;
 
-    const [audioStarted, setAudioStarted] = useState(false);
-
+  const [audioStarted, setAudioStarted] = useState(false);
   const [pageCover, setPageCover] = useState(true);
 
   useEffect(() => {
@@ -50,10 +49,10 @@ useEffect(() => {
 }, [subtitles]);
 
   useEffect(() => {
-    console.log("ok");
 
     for (let index = 0; index < pages.length; index++) {
-      if (time > pages[index].content.slice(-1)[0].end) {
+
+     if (time > pages[index].content.slice(-1)[0].end) {
         console.log("nice1");
         audioRef.current.gotoNextPage();
       }
@@ -68,7 +67,9 @@ useEffect(() => {
   const pageDistribution = () => {
     var pageArray = [];
     var subtitleIndex = 0;
-    var pageCount = 0;
+    var pageCount = 1;
+
+
 
     while (subtitles.length > subtitleIndex) {
       var pageFilled = 0;
@@ -100,6 +101,8 @@ useEffect(() => {
     }
     setPages(pageArray);
   };
+
+  console.log(pages, "pages");
 
 
   const TimeInDecimal = (time) => {
@@ -133,11 +136,14 @@ useEffect(() => {
     return <div>Loading subtitles...</div>;
   }
 
+  // const handlePlayAudio = () => {
+  //   audioRef.current.gotoNextPage()
+  // }
 
   const currentSubtitle = subtitles[currentSubtitleIndex];
 
   return (
-    <div className=" flex flex-col items-center mx-10 pb-10  h-full relative rounded-md  pt-5">
+    <div className=" flex flex-col items-center pb-10  h-full relative rounded-md  pt-5">
       <ReactAudioPlayer
         ref={audioRef}
         current
@@ -146,40 +152,36 @@ useEffect(() => {
         className="mb-5 w-full "
         controls
       />
+
+
       <FlipPage
         ref={audioRef}
         flipOnTouchZone={0.8}
         uncutPages={true}
         orientation="horizontal"
-        width={1400}
+        width={1260}
         className="flip"
         style={{
-          backgroundColor: "rgba(0, 0, 0, 0.4)",
           padding: "0",
-          margin: " 0 40px",
+          margin: " 0",
         }}
         showTouchHint
         height={720}
         animationDuration="1000"
       >
         
-       
-<div className="absolute right_image left-1/2 top-0 ">
-  <img
-    className="object-contain object-center h-full pt-5 pb-5"
-    src="https://images.pexels.com/photos/3662839/pexels-photo-3662839.jpeg?auto=compress&cs=tinysrgb&w=1600"
-    alt=""
-  />
-</div>      
+      
 
         {pages.map((page, pindex) => (
           <article
             key={pindex}
-            className="p-7 relative text-center flex flex-col text-black "
+            className="p-7 relative text-center flex flex-col text-black"
           >
+
             {page.content.map((subtitle, index) => {
+            
               return (
-                <div className="w-1/2 text-left  ">
+                <div className= "w-1/2 text-left">
                   <p
                     key={index}
                     className={`p-2 ${
@@ -188,13 +190,13 @@ useEffect(() => {
                         : "font-normal text-xl"
                     }`}
                   >
-                    {subtitle.text}
+                    {subtitle?.text}
                   </p>
                 </div>
               );
             })}
 
-            <div className="absolute right_image left-1/2 top-0 ">
+            <div className="absolute right_image bg-white left-1/2 top-0 ">
               <img
                 className="object-contain object-center h-full pt-5 pb-5"
                 src="https://images.pexels.com/photos/3662839/pexels-photo-3662839.jpeg?auto=compress&cs=tinysrgb&w=1600"
@@ -210,3 +212,6 @@ useEffect(() => {
     </div>
   );
 }
+
+
+// className="w-1/2 text-left  "

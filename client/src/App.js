@@ -11,9 +11,11 @@ import Footer from "./components/Footer";
 import Header from "./components/Header";
 import PublicLibrary from "./pages/PublicLibrary";
 import SavedLibrary from "./pages/SavedLibrary";
+import Listen from "./pages/Listen";
+
 import Blog from "./pages/Blog";
 import Text from "./pages/legacy";
-
+import UserProfile from "./pages/UserProfile";
 function App() {
 
   const navigate = useNavigate();
@@ -57,6 +59,8 @@ function App() {
         <Route path="/convertfile" element={<ConvertFile />} />
         <Route path="/savedlibrary" element={<SavedLibrary />} />
         <Route path="/library" element={<PublicLibrary />} />
+        <Route path="/listen" element={<Listen />} />
+        <Route path="/userprofile" element={<UserProfile />} />
         <Route path="/blog" element={<Blog />} />
         <Route path="/legacy" element={<Text/>}/>
 

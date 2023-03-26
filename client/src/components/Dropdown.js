@@ -6,17 +6,18 @@ function Dropdown({ handleSpeed }) {
   };
 
   return (
-    <div className="text-xl">
+    <div className="">
       <label
-        htmlFor="countries"
-        className="block mt-4 font-medium  dark:text-white"
+        htmlFor="speed"
+        className="block mt-4 font-medium text-2xl text-white"
       >
         Select an option
       </label>
       <select
-        id="countries"
+        id="speed"
         onChange={handleChange}
-        className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        className="px-7 py-2 rounded-lg mt-2"
+        // className="bg-gray-50 border text-lg border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
       >
         <option defaultValue value="slow">
           Slow

@@ -6,6 +6,8 @@ import { getAllAudio } from "../api";
 import { actionType } from "../context/reducer";
 
 export const AudioCard = ({ data, index }) => {
+  console.log(data);
+
   return (
     <motion.div className="w-1/2 p-10 m-5 flex justify-between items-center  bg-white rounded-full ">
       <div className="flex">
@@ -26,19 +28,21 @@ export const AudioCard = ({ data, index }) => {
   );
 };
 
+
 function SavedLibrary() {
   const [{ allAudio }, dispatch] = useStateValue();
 
-  useEffect(() => {
-    if (!allAudio) {
-      getAllAudio().then((data) => {
-        dispatch({
-          type: actionType.SET_ALL_AUDIO,
-          allAudio: data.song,
-        });
-      });
-    }
-  }, []);
+  console.log(allAudio);
+  // useEffect(() => {
+  //   if (!allAudio) {
+  //     getAllAudio().then((data) => {
+  //       dispatch({
+  //         type: actionType.SET_ALL_AUDIO,
+  //         allAudio: data,
+  //       });
+  //     });
+  //   }
+  // }, []);
 
 
   return (

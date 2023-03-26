@@ -6,6 +6,11 @@ import { auth } from "../config/firebase.config";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import Swal from "sweetalert2";
+import PizZip from "pizzip";
+import Docxtemplater from "docxtemplater";
+
+import { Document, Packer } from 'docx';
+
 
 import * as pdfjsLib from "pdfjs-dist";
 pdfjsLib.GlobalWorkerOptions.workerSrc =
@@ -17,6 +22,8 @@ function Home() {
   const navigate = useNavigate();
   const [imgUrl, setImgUrl] = useState("");
   const [FileType, setFileType] = useState("");
+
+  console.log(imgUrl);
 
   const convertFile = async () => {
     if (
@@ -87,6 +94,32 @@ function Home() {
     fileReader.readAsArrayBuffer(url);
   };
 
+
+  //load doc content
+  const getDocContent = (file) =>{
+    const reader = new FileReader();    
+    
+    reader.onload = async (e) => {
+      const content = e.target.result;
+      // const buffer = new Uint8Array(reader.result);
+      // console.log(buffer);
+
+      var zip = new PizZip(content);
+      console.log(zip);
+      var doc = new Docxtemplater().loadZip(zip, {
+        paragraphLoop: true,
+        linebreaks: true,
+      });
+
+      console.log(doc.getThumbnail());
+
+      
+    };
+    reader.readAsArrayBuffer(file);
+  
+
+  }
+
   const [materialname, setmaterialname] = useState();
   const [material, setmaterial] = useState();
   const fileChange = (file) => {
@@ -141,13 +174,17 @@ function Home() {
       }  
   };
 
+
+
   const handleChange = async (e) => {
     setFile(e.target.files[0]);
     fileChange(e);
     const file = e.target.files[0];
     if (file.type === "application/pdf") {
       await getPDFThumbnail(file);
-    } else {
+    } else if (file.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document"){
+      getDocContent(file);
+    } else{
       let reader = new FileReader();
       reader.onload = (e) => {
         const file = e.target.result;
