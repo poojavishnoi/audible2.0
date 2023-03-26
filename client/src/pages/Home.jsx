@@ -6,6 +6,7 @@ import { auth } from "../config/firebase.config";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import Swal from "sweetalert2";
+import { AnimatePresence, motion } from 'framer-motion';
 
 import * as pdfjsLib from "pdfjs-dist";
 pdfjsLib.GlobalWorkerOptions.workerSrc =
@@ -173,10 +174,11 @@ function Home() {
 
   return (
     <div>
-      <div className=" w-100% bg-image py-10 my-4 flex justify-around items-center">
+      <div className=" w-100% bg-image py-10 my-4 flex justify-around items-center relative overflow-hidden">
+      <AnimatePresence>
         {cint == 0 ? (
-          <>
-            <div className=" w-full py-60 p-4 ml-4 xl:ml-16 md:w-3/4 flex flex-col items-center justify-center">
+          <div className="abolute flex items-center justify-between w-full" >
+            <motion.div className=" w-full py-60 p-4 ml-4 xl:ml-16 md:w-3/4 flex flex-col items-center justify-center" key={cint} initial={{ x: -400 }} animate={{ x: 0 }} exit={{ x: 400 }} transition={{ duration: 0.75, type: "spring" }}>
               <h1 className="text-4xl md:text-5xl xl:text-6xl ">
                 Audio book for your kids
               </h1>
@@ -186,7 +188,7 @@ function Home() {
               <h1 className="text-xl mb-4">
                 Convert the pdf, text or word files into audio.
               </h1>
-            </div>
+            </motion.div>
             <div className="w-full py-60 p-4 ml-4 xl:ml-16 md:w-1/4 flex flex-col items-end justify-center relative">
               <div className=" w-32 h-32 rounded-full absolute bg-yellow-200 blur-xl flex flex-col items-center justify-center"></div>
               <button
@@ -212,10 +214,10 @@ function Home() {
                 </svg>
               </button>
             </div>
-          </>
+          </div>
         ) : (
-          <>
-          <div className="w-full p-4 md:w-3/4 flex items-center justify-center flex-1 mr-48" >
+          <div className="abolute flex items-center justify-between w-full" >
+          <motion.div className="w-full p-4 md:w-3/4 flex items-center justify-center flex-1 mr-48" key={cint} initial={{ x: 700 }} animate={{ x: 0 }} exit={{ x: -700 }} transition={{ duration: 1, type: "spring" }}>
             {!preview? <div className=" w-full flex flex-col items-center justify-center flex-1">
               <label className="text-md" htmlFor="file_input">
                 Upload file
@@ -231,7 +233,7 @@ function Home() {
               </p>
             </div> : <div className="flex flex-col"> 
           <div className="relative text-left inline-block w-fit">
-                <div className="flex items-center justify-center">
+                <div className="flex items-center justify-center relative z-20">
                     <button
                         onClick={() => {
                             setShowDropDown(!showDropDown);
@@ -240,39 +242,29 @@ function Home() {
                     >
                         <img className=" !rounded-3xl !w-72  !object-contain my-10 !h-[45%] !flex-1" src={imgUrl} alt="img" />
                         {showDropDown ? (
-                            ""
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="-mr-1 ml-2 h-5 w-5">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M11.25 9l-3 3m0 0l3 3m-3-3h7.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                          
+                          
                         ) : (
-                            <svg
-                                className="-mr-1 ml-2 h-5 w-5"
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 20 20"
-                                fill="currentColor"
-                                aria-hidden="true"
-                            >
-                                <path
-                                    fill-rule="evenodd"
-                                    d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
-                                    clip-rule="evenodd"
-                                />
-                            </svg>
+                          <svg  className="-mr-1 ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M12.75 15l3-3m0 0l-3-3m3 3h-7.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
                         )}
                     </button>
                 </div>
                 {showDropDown ? (
-                    <div className="animate-slide-out transition-all duration-10000 flex items-center absolute bg-white top-0 left-[101%] z-10  w-full h-full origin-top-right rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                    <motion.div className="animate-slide-out transition-all duration-10000 flex items-center absolute bg-white top-0 left-[101%] z-10  w-full h-full origin-top-right rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" initial={{ transform: 'translateX(-90%)' }}
+                    animate={{ transform: 'translateX(0%)' }}
+                    exit={{ transform: 'translateX(-90%)' }}
+                    transition={{
+                        ease: 'linear',
+                        duration: 0.01,
+                    }}>
                         <button onClick={prev} className='mx-1 p-2 rounded-full bg-gray-400'>
-                            <svg
-                                className="h-5 w-5"
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 20 20"
-                                fill="currentColor"
-                                aria-hidden="true"
-                            >
-                                <path
-                                    fill-rule="evenodd"
-                                    d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
-                                    clip-rule="evenodd"
-                                />
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="h-5 w-5">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M21 16.811c0 .864-.933 1.405-1.683.977l-7.108-4.062a1.125 1.125 0 010-1.953l7.108-4.062A1.125 1.125 0 0121 8.688v8.123zM11.25 16.811c0 .864-.933 1.405-1.683.977l-7.108-4.062a1.125 1.125 0 010-1.953L9.567 7.71a1.125 1.125 0 011.683.977v8.123z" />
                             </svg>
                         </button>
                         <div className="flex relative overflow-hidden">
@@ -297,21 +289,11 @@ function Home() {
                             </div>
                         </div>
                         <button onClick={next} className='mx-1 p-2 rounded-full bg-gray-400'>
-                            <svg
-                                className="h-5 w-5"
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 20 20"
-                                fill="currentColor"
-                                aria-hidden="true"
-                            >
-                                <path
-                                    fill-rule="evenodd"
-                                    d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
-                                    clip-rule="evenodd"
-                                />
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="h-5 w-5">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M3 8.688c0-.864.933-1.405 1.683-.977l7.108 4.062a1.125 1.125 0 010 1.953l-7.108 4.062A1.125 1.125 0 013 16.81V8.688zM12.75 8.688c0-.864.933-1.405 1.683-.977l7.108 4.062a1.125 1.125 0 010 1.953l-7.108 4.062a1.125 1.125 0 01-1.683-.977V8.688z" />
                             </svg>
                         </button>
-                    </div>
+                    </motion.div>
                 ) : (
                     ""
                 )}
@@ -332,7 +314,7 @@ function Home() {
             </div>
             
             </div>}
-          </div>
+          </motion.div>
             <div className="w-full py-60 p-4 ml-4 xl:ml-16 md:w-1/4 flex flex-col items-end justify-center relative">
               <div className=" w-32 h-32 rounded-full absolute bg-yellow-200 blur-xl flex flex-col items-center justify-center"></div>
               <button
@@ -359,8 +341,9 @@ function Home() {
               </button>
             </div>
             
-          </>
+          </div>
         )}
+        </AnimatePresence>
       </div>
 
       <div className=" bg-emerald-50	 rounded-lg p-7 mx-4 my-10 md:mx-10 xl:mx-40 ">

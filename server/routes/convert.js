@@ -6,6 +6,7 @@ const client = new textToSpeech.TextToSpeechClient();
 const pdfjsLib = require('pdfjs-dist');
 const util = require("util");
 const fs = require("fs");
+const { log, Console } = require('console');
 
 router.post('/coqui', async function(req, res) {
     try{
@@ -36,7 +37,6 @@ router.post('/coqui', async function(req, res) {
         }
       }
       ).pipe(new PassThrough());
-      const resp = await request.get('http://127.0.0.1:5000/delete');
       res.set('Content-Type', 'application/zip');
       res.set('Content-Disposition', 'attachment; filename="audio.zip"');
       response.pipe(res);
@@ -57,7 +57,27 @@ router.post("/google" ,(req, res) => {
       console.log(err)
     }
 })
-  
+
+router.post("/summarise", async (req, res) => {
+    try{
+      const textValue = req.body.text; 
+      let summary = '';
+      console.log("converting text::::::::");
+      const response = await request.post('http://127.0.0.1:5000/summarise',
+      {json:{text:textValue}})
+      .on('data', (data) => {
+        summary += data;
+      })
+      .on('end', () => {
+        console.log("summary", summary);
+        res.json({ summary: summary });
+      });
+    }
+    catch(err){
+      console.log(err)
+    }
+})
+
 async function convertTexttoMp3(words) {
     try{
 
