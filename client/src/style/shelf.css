@@ -29,7 +29,7 @@
   background-position: center;
   background-repeat: no-repeat;
   background-size: contain;
-  left: 7vw;
+  left: -4vw;
   top: 30vh;
   margin-bottom: 30vh;
 }
@@ -40,8 +40,8 @@
 .card_back {
   width: 15vw;
   position: relative;
-  top: -12vh;
-  left: 7.3vw;
+  top: -10vh;
+  left: 14.3vw;
   height: 23vw;
   perspective: 100vw;
   float: left;
@@ -126,4 +126,41 @@
 
 .card_back {
   transform: rotateY(-180deg);
+}
+
+
+.book {
+  perspective: 1000px;
+  backface-visibility: hidden;
+}
+
+.front {
+  transform-style: preserve-3d;
+  background-color: white;
+  border-radius: 0 0 5px 5px;
+  transform: rotateY(0deg);
+}
+
+.back {
+  transform-style: preserve-3d;
+  background-color: white;
+  border-radius: 0 0 5px 5px;
+  transform: rotateY(180deg);
+}
+.rotate-y-180 {
+  transform: rotateY(180deg);
+}
+
+.transition {
+  transition-property: all;
+  transition-duration: 0.5s;
+  transition-timing-function: ease-in-out;
+}
+
+.hover\:rotate-y-180:hover .front {
+  transform: rotateY(-180deg);
+}
+
+.hover\:rotate-y-180:hover .back {
+  transform: rotateY(0deg);
 }

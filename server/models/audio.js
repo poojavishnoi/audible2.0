@@ -25,7 +25,7 @@ const AudioSchema = mongoose.Schema({
   },
   listeners:{
     type: Array,
-    default: [{email: {type: String}, paused: {type: Number, default: 0}}]
+    default: [{email: {type: String}, paused: {type: String, default: "0"}}]
   },
   audio: {
     type: String,
@@ -39,6 +39,15 @@ const AudioSchema = mongoose.Schema({
     type: String,
     required: true
   },
+  summary: {
+    type: String,
+    required: true
+  },
+  duration: {
+    type: String,
+    required: true
+  },
+
 
 },{
   timestamps: true
