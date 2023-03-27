@@ -6,10 +6,10 @@ function Dropdown({ handleSpeed }) {
   };
 
   return (
-    <div className="">
+    <>
       <label
         htmlFor="speed"
-        className="block mt-4 font-medium text-2xl text-white"
+        className="block mt-4 font-medium text-2xl"
       >
         Select an option
       </label>
@@ -25,7 +25,7 @@ function Dropdown({ handleSpeed }) {
         <option value="medium">Medium</option>
         <option value="fast">Fast</option>
       </select>
-    </div>
+    </>
   );
 }
 

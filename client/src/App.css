@@ -17,14 +17,12 @@
   height: 100%;
 }
 
-.bg2-image{
-  background-image: url("./images/bg2.png");
-  object-fit: contain;
-  height: 100%;
-  width: 100%;
-  background-position: center;
+.convert-image{
+  background-image: url("./images/convert.png");
+  /* object-fit: contain; */
+  
+  background-size: contain;
   background-repeat: no-repeat;
-  background-size: contain;  
 }
 
 .shelf-bg {
@@ -81,19 +79,23 @@
   background-color: var(--purple-shade);
 }
 
-/*scrollbar code below*/
-/* ::-webkit-scrollbar {
-  width: 2px;
-} */
 
-/* Track */
-/* ::-webkit-scrollbar-track {
-  box-shadow: inset 0 0 5px grey; 
-  border-radius: 10px;
+.fade-in-out {
+  opacity: 0;
+  animation: fade-in 1s ease-in forwards;
 }
- 
-/* Handle */
-/* ::-webkit-scrollbar-thumb {
-  background: red; 
-  border-radius: 10px;
-} */ 
+
+@keyframes fade-in {
+  100% {
+    opacity: 1;
+  }
+}
+
+/* @keyframes fade-out {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+} */
