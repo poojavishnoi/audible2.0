@@ -89,7 +89,7 @@ function ConvertFile() {
           console.log(typeof srtText + " srt-text");
 
           const audio = new Audio(URL.createObjectURL(wavBlob));
-
+          console.log(audio, "audio");
           // Set the state to update the URL and SRT text
           setUrl(audio);
           setSrt(srtText);
@@ -168,6 +168,8 @@ function ConvertFile() {
       console.log(error);
     }
   };
+
+console.log(srt, "srt");
 
   return (
     <div className="flex  bg-image p-10">

@@ -20,7 +20,7 @@ function PublicLibrary() {
       try {
         console.log(user.user.email, "user")
         if (loading) {
-          const response = await fetch(`${baseUrl}api/mongi/getLibrary/${user.user.email}`)
+          const response = await fetch(`${baseUrl}api/mongi/getPersonalLibrary/${user.user.email}`)
           const data = await response.json()
           for (let i = 0; i < data.audio.length; i++) {
             data.audio[i].summa = false

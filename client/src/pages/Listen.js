@@ -1,14 +1,7 @@
 import React, {useEffect} from "react";
 import { useLocation } from "react-router";
 import { useStateValue } from "../context/StateProvider";
-import JSZip from "jszip";
-import axios from "axios";
 import { useState } from "react";
-import img from "../images/img.jpg";
-import Music from "../audio.mp3";
-import { motion } from "framer-motion";
-import SubtitlePlayer from "./SubtitlePlayer";
-import Dropdown from "../components/Dropdown";
 import NewFlipBook from "../components/NewFlipBook";
 import Swal from "sweetalert2";
 
@@ -19,6 +12,8 @@ function Listen() {
   const [{ user }, dispatch] = useStateValue();
   const [audioBook, setBooks] = useState([])
   const [loading, setLoading] = useState(true)
+  const [url, setUrl] = useState(null)
+  const [srt, setSrt] = useState(null)
 
   const {
     state: { id },
@@ -35,6 +30,22 @@ function Listen() {
           //   data.audio[i].summa = false
           // }
           console.log(data, "data");
+          const audioBlob = data.audio.audio; // get the Blob object from the 'audio' property
+          const blob = new Blob([audioBlob], { type: 'audio/wav' });
+          const audio = new Audio(URL.createObjectURL(blob));
+          console.log(audio.src, "audio");
+
+          console.log(data.audio.srt, "srt");
+          const srtText = data.audio.srt;
+          // if (audioBlob instanceof Blob) {
+          //   console.log("myBlob is a Blob object");
+          // } else {
+          //   console.log("myBlob is not a Blob object");
+          // }
+          
+          //const audio = new Audio(URL.createObjectURL(audioBlob));
+          setUrl(audio);
+          setSrt(srtText);
           setBooks(data)
           setLoading(false)
         }
@@ -109,9 +120,9 @@ function Listen() {
       
       <div className=" text-white rounded-3xl mx-10 ok mt-4 w-11/12 h-full px-10">
         <div className="  justify-center">
-          {/* {url && srt && ( */}
-            <NewFlipBook audioSrc={audioBook.audio.audio} subtitleSrc={audioBook.audio.srt} />
-          {/* )} */}
+          {url && srt && (
+            <NewFlipBook audioSrc={url.src} subtitleSrc={srt} />
+          )}
         </div>
         {/*}
         <div className="my-4 text-black">

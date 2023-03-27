@@ -131,8 +131,15 @@ router.get("/getBook/:id", async(req,res) => {
   }
   const data = await Audio.findById(filter, options)
   if(data){
-    return res.status(200).send({success: true, audio:data})
-  }else{
+    const dhwani = Buffer.from( data.audio, "base64");
+    const srt = Buffer.from( data.srt, "base64");
+    data.srt = srt.toString('utf-8');
+    data.audio = "data:audio/wav;base64," + dhwani.toString('base64');
+    // const audioBlob = new Blob([dhwani], { type: "audio/wav" });
+    // const responseObj = { success: true, audio: audioBlob, someData: data };
+    // return res.status(200).send(responseObj);
+    return res.status(200).send({success: true, audio: data})
+    }else{
     return res.status(400).send({success:false, msg: 'Data not found'})
   }
 })

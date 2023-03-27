@@ -15,21 +15,13 @@ export default function NewFlipBook({audioSrc, subtitleSrc }) {
 
   const [audioStarted, setAudioStarted] = useState(false);
   const [pageCover, setPageCover] = useState(true);
-
+  console.log(audioSrc, "audioSrc");
   useEffect(() => {
     if (typeof subtitleSrc !== "object") {
-      // // Parse the SRT file into an array of subtitle objects
-      // const subtitles = subtitleSrc.trim()
-      //   .split(/\n\s*\n/)
-
-      fetch(subtitleSrc)
-        .then((response) => response.text())
-        .then((data) => {
-          // Parse the SRT file into an array of subtitle objects
-          const subtitles = data
-            .trim()
-            .split("\n\n")
-            .map((subtitle) => {
+      // Parse the SRT file into an array of subtitle objects
+      const subtitles = subtitleSrc.trim()
+        .split(/\n\s*\n/)            
+        .map((subtitle) => {
               const [index, time, text] = subtitle?.split("\n");
               return {
                 index,
@@ -40,11 +32,12 @@ export default function NewFlipBook({audioSrc, subtitleSrc }) {
             });
 
           setSubtitles(subtitles);
-        });
-    }
+        };
+    
 
   },[]);
-
+console.log(subtitles, "subtitles");
+console.log(subtitleSrc, "subtitleSrc");
 useEffect(() => { 
   subtitles? pageDistribution() : <>  </>
 }, [subtitles]);
