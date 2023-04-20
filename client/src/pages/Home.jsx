@@ -1,6 +1,8 @@
 import React from "react";
-import homeImg from "../images/homee.jpg";
-import blogImg from "../images/blog.jpg";
+import blogImg1 from "../images/1.jpg";
+import blogImg2 from "../images/2.jpg";
+import blogImg3 from "../images/3.jpg";
+import blogImg4 from "../images/4.jpg";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../config/firebase.config";
 import { useState, useEffect } from "react";
@@ -239,7 +241,7 @@ function Home() {
               <div className="w-full py-60 p-4 ml-4 xl:ml-16 md:w-1/4 flex flex-col items-end justify-center relative">
                 <div className=" w-32 h-32 rounded-full absolute  blur-xl flex flex-col items-center justify-center"></div>
                 <button
-                  className="relative before:z-10 before:absolute before:-left-3 before:top-1/2 before:w-max before:max-w-xs before:-translate-x-full before:-translate-y-1/2 before:rounded-md before:bg-gray-700 before:px-3 before:py-2 before:text-white before:invisible before:content-[attr(data-tip)] after:z-10 after:absolute after:-left-[0.8rem] after:top-1/2 after:h-0 after:w-0 after:translate-x-0 after:-translate-y-1/2 after:border-8 after:border-l-gray-700 after:border-r-transparent after:border-b-transparent after:border-t-transparent after:invisible hover:before:visible hover:after:visible"
+                  className=" relative before:z-10 before:absolute before:-left-3 before:top-1/2 before:w-max before:max-w-xs before:-translate-x-full before:-translate-y-1/2 before:rounded-md before:bg-gray-700 before:px-3 before:py-2 before:text-white before:invisible before:content-[attr(data-tip)] after:z-10 after:absolute after:-left-[0.8rem] after:top-1/2 after:h-0 after:w-0 after:translate-x-0 after:-translate-y-1/2 after:border-8 after:border-l-gray-700 after:border-r-transparent after:border-b-transparent after:border-t-transparent after:invisible hover:before:visible hover:after:visible"
                   data-tip="Explore"
                   onClick={() => {
                     setcint(1);
@@ -251,7 +253,7 @@ function Home() {
                     viewBox="0 0 24 24"
                     strokeWidth={1.5}
                     stroke="currentColor"
-                    className="w-32 h-32 hover:scale-105 cursor-pointer transition-all relative"
+                    className="w-10 h-10 md:w-16 md:h-16 xl:w-24 xl:w-24 2xl:w-24 2xl:h-24 hover:scale-105 cursor-pointer transition-all relative"
                   >
                     <path
                       strokeLinecap="round"
@@ -263,9 +265,9 @@ function Home() {
               </div>
             </div>
           ) : (
-            <div className="abolute flex items-center justify-between w-full">
+            <div className="abolute py-6 flex items-center justify-between w-full ">
               <motion.div
-                className="w-full p-4 md:w-3/4 flex items-center justify-center flex-1 mr-48"
+                className=" p-4 md:w-3/4 flex items-center justify-center flex-1 mr-16 md:mr-48"
                 key={cint}
                 initial={{ x: 700 }}
                 animate={{ x: 0 }}
@@ -273,12 +275,12 @@ function Home() {
                 transition={{ duration: 1, type: "spring" }}
               >
                 {!preview ? (
-                  <div className=" w-full flex flex-col items-center justify-center flex-1">
+                  <div className="w-[15rem] md:w-[30rem] py-52 flex flex-col items-start  md:items-center justify-center flex-1">
                     <label className="text-md" htmlFor="file_input">
                       Upload file
                     </label>
                     <input
-                      className="block w-full md:w-1/2 text-sm text-white border rounded-md cursor-pointer bg-gray-800 dark:text-gray-400 focus:outline-none"
+                      className="block w-full sm:w-full md:w-1/2 text-sm text-white border rounded-md cursor-pointer bg-gray-800 dark:text-gray-400 focus:outline-none"
                       id="file_input"
                       type="file"
                       onChange={handleChange}
@@ -290,7 +292,7 @@ function Home() {
                 ) : (
                   <div className="flex flex-col">
                     <div className="relative text-left inline-block w-fit ">
-                      <div className="flex flex-col p-5 min-h-[40rem] rounded-md bg-white items-center justify-center relative z-20">
+                      <div className="flex flex-col md:p-5 min-h-[40rem] rounded-md bg-white items-center justify-center relative z-20">
                         <div className="">
                           <p>
                             You can choose bookcovers as per your choice by
@@ -303,9 +305,9 @@ function Home() {
                           }}
                           className="items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-xs sm:text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100"
                         >
-                          <div className="flex items-center ">
+                          <div className=" flex items-center ">
                             <img
-                              className="m-5 bg-red-200 !rounded-3xl !w-72  !object-contain  !h-[100%] !flex-1"
+                              className="m-1 md:m-5 bg-red-200 !rounded-3xl !w-28 md:!w-72  !object-contain  !h-[100%] !flex-1"
                               src={imgUrl}
                               alt="img"
                             />
@@ -345,7 +347,7 @@ function Home() {
                       </div>
                       {showDropDown ? (
                         <motion.div
-                          className="animate-slide-out transition-all duration-10000 flex items-center absolute bg-white top-0 left-[101%] z-10 w-[82%] h-full origin-top-right rounded-md p-7 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+                          className="animate-slide-out transition-all duration-10000 flex  items-center absolute bg-white top-0 left-[101%] z-10 w-[82%] h-full origin-top-right rounded-md p-7 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
                           initial={{ transform: "translateX(-90%)" }}
                           animate={{ transform: "translateX(0%)" }}
                           exit={{ transform: "translateX(-90%)" }}
@@ -364,7 +366,7 @@ function Home() {
                               viewBox="0 0 24 24"
                               strokeWidth={1.5}
                               stroke="currentColor"
-                              className="h-5 w-5"
+                              className=" h-5 w-5"
                             >
                               <path
                                 strokeLinecap="round"
@@ -449,7 +451,7 @@ function Home() {
                 )}
               </motion.div>
               <div className="w-full py-60 p-4 ml-4 xl:ml-16 md:w-1/4 flex flex-col items-end justify-center relative">
-                <div className=" w-32 h-32 rounded-full absolute bg-yellow-200 blur-xl flex flex-col items-center justify-center"></div>
+                <div className=" w-32 h-32 rounded-full absolute  blur-xl flex flex-col items-center justify-center"></div>
                 <button
                   className="relative before:z-10 before:absolute before:-left-3 before:top-1/2 before:w-max before:max-w-xs before:-translate-x-full before:-translate-y-1/2 before:rounded-md before:bg-gray-700 before:px-3 before:py-2 before:text-white before:invisible before:content-[attr(data-tip)] after:z-10 after:absolute after:-left-[0.8rem] after:top-1/2 after:h-0 after:w-0 after:translate-x-0 after:-translate-y-1/2 after:border-8 after:border-l-gray-700 after:border-r-transparent after:border-b-transparent after:border-t-transparent after:invisible hover:before:visible hover:after:visible"
                   data-tip="Explore"
@@ -463,7 +465,7 @@ function Home() {
                     viewBox="0 0 24 24"
                     strokeWidth={1.5}
                     stroke="currentColor"
-                    className="w-32 h-32 hover:scale-105 cursor-pointer transition-all relative"
+                    className="w-10 h-10 md:w-16 md:h-16 xl:w-24 xl:w-24 2xl:w-24 2xl:h-24 hover:scale-105 cursor-pointer transition-all relative"
                   >
                     <path
                       strokeLinecap="round"
@@ -478,14 +480,14 @@ function Home() {
         </AnimatePresence>
       </div>
 
-      <div className=" bg-emerald-50	 rounded-lg p-7 mx-4 my-10 md:mx-10 xl:mx-40 ">
-        <h1 className="text-xl">Blogs you might want to read</h1>
+      <div className=" bg-blue-50 rounded-lg p-4 mx-4 my-10 md:p-7 md:mx-10 xl:mx-40 ">
+        <h1 className="text-xl lg:text-3xl  ">Blogs you might want to read</h1>
 
-        <div className=" flex flex-wrap justify-center mt-4">
-          <div className=" rounded-md overflow-hidden relative w-80  m-5 bg-white">
-            <img src={homeImg} alt="home" />
-            <h1 className="text-lg p-4 ">Learning Disabilities</h1>
-            <h1 className="text-sm px-4 pb-32">
+        <div className="flex flex-wrap justify-center mt-4 ">
+          <div className=" rounded-md overflow-hidden relative w-[40rem] mb-5 md:m-5 xl:m-7 bg-white">
+            <img src={blogImg1} className="" alt="home" />
+            <h1 className="text-lg md:text-xl xl:text-2xl text-slate-800 p-4 ">Learning Disabilities</h1>
+            <h1 className="text-md md:text-lg xl:text-xl text-slate-600 px-4 pb-24">
               If you feel that your organizational skills need improvement, then
               you must rely on tools strategies to help you be more productive.
             </h1>
@@ -497,19 +499,20 @@ function Home() {
                   },
                 })
               }
-              className="m-4 p-1 absolute bottom-0 rounded-md bg-orange-200 cursor-pointer  border"
+              className="text-sm md:text-lg xl:text-xl m-4 p-2 absolute bottom-0 rounded-md bg-orange-200 cursor-pointer  border"
             >
               Read more
             </button>
           </div>
 
-          <div className=" rounded-md overflow-hidden relative w-80  m-5 bg-white">
-            <img src={blogImg} alt="blog img" />
+          <div className=" rounded-md overflow-hidden relative mb-5 w-[40rem] md:m-5 xl:m-7 bg-white">
+            <img src={blogImg2} alt="blog img" />
 
-            <h1 className="text-lg p-4 ">
+            <h1 className="text-lg md:text-xl xl:text-2xl text-slate-800 p-4">
               Dealing With an ADHD Diagnosis as an Adult
             </h1>
-            <h1 className="text-sm px-4 ">
+                        <h1 className="text-md md:text-lg xl:text-xl text-slate-600 px-4 pb-24">
+
               Many people associate ADHD witdetailsh children, or think it’s a
               “kid’s disorder”. But, about 4-5% of adults in the U.S. have it.
               Unfortunately, not many adults get an official diagnosis or
@@ -523,18 +526,18 @@ function Home() {
                   },
                 })
               }
-              className="m-4 p-1 absolute bottom-0  rounded-md bg-orange-200 cursor-pointer  border"
+              className="text-sm md:text-lg xl:text-xl m-4 p-2 absolute bottom-0 rounded-md bg-orange-200 cursor-pointer  border"
             >
               Read more
             </button>
           </div>
 
-          <div className=" rounded-md overflow-hidden relative w-80 m-5 bg-white">
-            <img src={homeImg} alt="home" />
-            <h1 className="text-lg p-4 ">
+          <div className=" rounded-md overflow-hidden mb-5 relative w-[40rem] md:m-5 xl:m-7 bg-white">
+            <img src={blogImg3} alt="home" />
+            <h1 className="text-lg md:text-xl xl:text-2xl text-slate-800 p-4">
               Learning Disability, Dyslexia, ADHD Know Your Rights
             </h1>
-            <h1 className="text-sm px-4 ">
+            <h1 className="text-md md:text-lg xl:text-xl text-slate-600 px-4 pb-24">
               if you suffer from learning disabilities, attention deficit
               hyperactivity disorder (ADHD) or dyslexia, you are entitled to
               certain inalienable rights under the Individuals with Disabilities
@@ -548,18 +551,19 @@ function Home() {
                   },
                 })
               }
-              className="m-4 p-1 absolute bottom-0 rounded-md bg-orange-200 cursor-pointer  border"
+              className="text-sm md:text-lg xl:text-xl m-4 p-2 absolute bottom-0 rounded-md bg-orange-200 cursor-pointer  border"
             >
               Read more
             </button>
           </div>
 
-          <div className=" rounded-md overflow-hidden relative w-80 m-5 bg-white">
-            <img src={blogImg} alt="blog img" />
-            <h1 className="text-lg p-4 ">
+          <div className=" rounded-md overflow-hidden mb-5 relative w-[40rem] md:m-5 xl:m-7 bg-white">
+            <img src={blogImg4} alt="blog img" />
+            <h1 className="text-lg md:text-xl xl:text-2xl text-slate-800 p-4">
               Learning Disability Testing and Assessment
             </h1>
-            <h1 className="text-sm px-4 ">
+                        <h1 className="text-md md:text-lg xl:text-xl text-slate-600 px-4 pb-24">
+
               No parent likes to watch their child struggle. Not in school, not
               in life. No adult wants to struggle with learning disabilities
               either.{" "}
@@ -572,7 +576,7 @@ function Home() {
                   },
                 })
               }
-              className="m-4 p-1 absolute bottom-0  rounded-md bg-orange-200 cursor-pointer  border"
+              className="text-sm md:text-lg xl:text-xl m-4 p-2 absolute bottom-0 rounded-md bg-orange-200 cursor-pointer  border"
             >
               Read more
             </button>
