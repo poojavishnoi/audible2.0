@@ -17,7 +17,7 @@ function ConvertFile() {
     state: { name, textValue, extention, file, image },
   } = useLocation();
 
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [processing, setProcessing] = useState(false);
   const [saveType, setSaveType]  = useState("personal");
 
@@ -90,10 +90,8 @@ function ConvertFile() {
           const wavBlob = await wavFile.async("blob");
           const srtText = await srtFile.async("text");
           setaudioblob(wavBlob);
-          console.log(typeof srtText + " srt-text");
-
-          const audio = new Audio(URL.createObjectURL(wavBlob));
-          console.log(audio, "audio");
+          const acb = URL.createObjectURL(wavBlob)
+          const audio = new Audio(acb);
           // Set the state to update the URL and SRT text
           setUrl(audio);
           setSrt(srtText);
@@ -176,7 +174,6 @@ function ConvertFile() {
     }
   };
 
-console.log(srt, "srt");
 
   return (
     <div>

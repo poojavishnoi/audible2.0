@@ -6,7 +6,6 @@ import FlipPage from "react-flip-page";
 
 export default function NewFlipBook({audioSrc, subtitleSrc }) {
 
-  console.log(audioSrc, "audioSrc");
   const audioRef = useRef(null);
   const [subtitles, setSubtitles] = useState([]);
   const [currentSubtitleIndex, setCurrentSubtitleIndex] = useState(-1);
@@ -17,7 +16,6 @@ export default function NewFlipBook({audioSrc, subtitleSrc }) {
 
   const [audioStarted, setAudioStarted] = useState(false);
   const [pageCover, setPageCover] = useState(true);
-  console.log(audioSrc, "audioSrc");
   useEffect(() => {
     if (typeof subtitleSrc !== "object") {
       // Parse the SRT file into an array of subtitle objects
@@ -38,8 +36,6 @@ export default function NewFlipBook({audioSrc, subtitleSrc }) {
     
 
   },[]);
-console.log(subtitles, "subtitles");
-console.log(subtitleSrc, "subtitleSrc");
 useEffect(() => { 
   subtitles? pageDistribution() : <>  </>
 }, [subtitles]);
@@ -49,11 +45,9 @@ useEffect(() => {
     for (let index = 0; index < pages.length; index++) {
 
      if (time > pages[index].content.slice(-1)[0].end) {
-        console.log("nice1");
         audioRef.current.gotoNextPage();
       }
       if (time < pages[index].content[0].start) {
-        console.log("nice2");
         audioRef.current.gotoPreviousPage();
       }
     }
@@ -72,7 +66,6 @@ useEffect(() => {
       var content = [];
 
       while (characterLimit >= pageFilled && subtitles.length > subtitleIndex) {
-        console.log(subtitles[subtitleIndex].text.length, "subtitle length");
         if (
           subtitles[subtitleIndex].text.length + pageFilled <
           characterLimit
@@ -93,7 +86,6 @@ useEffect(() => {
       });
 
       pageCount++;
-      console.log(pageArray, "pageArray");
     }
     setPages(pageArray);
   };
@@ -144,7 +136,8 @@ useEffect(() => {
         ref={audioRef}
         current
         onListen={handleAudioTimeUpdate}
-        src={audioSrc}
+        src= {`data:audio/wav;base64,${audioSrc}`}
+        type="audio/wav"
         onLoadedMetaData={handleLoadMetadata}
         className="mb-5 w-full "
         controls

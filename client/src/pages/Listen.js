@@ -3,6 +3,7 @@ import { useLocation } from "react-router";
 import { useStateValue } from "../context/StateProvider";
 import { useState } from "react";
 import NewFlipBook from "../components/NewFlipBook";
+import Audiooo from "../sound.wav";
 import Swal from "sweetalert2";
 
 const baseUrl = "http://localhost:4000/";
@@ -24,29 +25,14 @@ function Listen() {
   const getAudioBook = async () => {
     if (user != null || user !== undefined) {
       try {
-        // console.log(user.user.email, "user")
         if (loading) {
           const response = await fetch(`${baseUrl}api/mongi/getBook/${id}`)
           const data = await response.json()
-          // for (let i = 0; i < data.audio.length; i++) {
-          //   data.audio[i].summa = false
-          // }
           console.log(data, "data");
-          const audioBlob = data.audio.audio; // get the Blob object from the 'audio' property
-          const blob = new Blob([audioBlob], { type: 'audio/wav' });
-          const audio = new Audio(URL.createObjectURL(blob));
-          console.log(audio.src, "audio");
-
+          const audioBlob = data.audio.audio;
           console.log(data.audio.srt, "srt");
           const srtText = data.audio.srt;
-          // if (audioBlob instanceof Blob) {
-          //   console.log("myBlob is a Blob object");
-          // } else {
-          //   console.log("myBlob is not a Blob object");
-          // }
-          
-          //const audio = new Audio(URL.createObjectURL(audioBlob));
-          setUrl(audio);
+          setUrl(audioBlob);
           setSrt(srtText);
           setBooks(data)
           setLoading(false)
@@ -122,8 +108,8 @@ function Listen() {
       
       <div className=" text-white rounded-3xl mx-10 ok mt-4 w-11/12 h-full px-10">
         <div className="  justify-center">
-          {url && srt && (
-            <NewFlipBook audioSrc={url.src} subtitleSrc={srt} />
+          { srt && (
+            <NewFlipBook audioSrc={url} subtitleSrc={srt} />
           )}
         </div>
         {/*}

@@ -11,7 +11,7 @@ router.post("/save", upload.fields([{ name: 'audio', maxCount: 1 }, { name: 'srt
   const { audio, srt } = req.files;
   const visibility = true
   const listeners = [{author_email, paused: 0}]
-  const audioData = audio[0].buffer.toString('base64');
+  const audioData = audio[0].buffer
   const srtData = srt[0].buffer.toString('base64');
   const newAudio = new Audio({
     file_name,
@@ -131,10 +131,10 @@ router.get("/getBook/:id", async(req,res) => {
   }
   const data = await Audio.findById(filter, options)
   if(data){
-    const dhwani = Buffer.from( data.audio, "base64");
+     const dhwani = data.audio.toString("base64");
     const srt = Buffer.from( data.srt, "base64");
     data.srt = srt.toString('utf-8');
-    data.audio = "data:audio/wav;base64," + dhwani.toString('base64');
+    data.audio = dhwani;
     // const audioBlob = new Blob([dhwani], { type: "audio/wav" });
     // const responseObj = { success: true, audio: audioBlob, someData: data };
     // return res.status(200).send(responseObj);

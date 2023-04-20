@@ -41,11 +41,11 @@ const AudioSchema = mongoose.Schema({
   },
   summary: {
     type: String,
-    required: true
+    required: false
   },
   duration: {
     type: String,
-    required: true
+    required: false
   },
 
 
