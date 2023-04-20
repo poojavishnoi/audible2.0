@@ -9,7 +9,7 @@ function Dropdown({ handleSpeed }) {
     <>
       <label
         htmlFor="speed"
-        className="block mt-4 font-medium text-2xl"
+        className="block mt-4 font-medium md:text-md lg:text-xl"
       >
         Select an option
       </label>

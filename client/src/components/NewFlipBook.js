@@ -4,7 +4,8 @@ import ReactAudioPlayer from "react-h5-audio-player";
 import "react-h5-audio-player/lib/styles.css";
 import FlipPage from "react-flip-page";
 
-export default function NewFlipBook({audioSrc, subtitleSrc }) {
+
+export default function NewFlipBook( {setPausedTime,audioTime, audioSrc, subtitleSrc }) {
 
   const audioRef = useRef(null);
   const [subtitles, setSubtitles] = useState([]);
@@ -14,14 +15,24 @@ export default function NewFlipBook({audioSrc, subtitleSrc }) {
   const characterLimit = 600;
   const [duration, setDuration] = useState(0);
 
-  const [audioStarted, setAudioStarted] = useState(false);
-  const [pageCover, setPageCover] = useState(true);
+
   useEffect(() => {
     if (typeof subtitleSrc !== "object") {
-      // Parse the SRT file into an array of subtitle objects
-      const subtitles = subtitleSrc.trim()
-        .split(/\n\s*\n/)            
-        .map((subtitle) => {
+      // // Parse the SRT file into an array of subtitle objects
+      // const subtitles = subtitleSrc.trim()
+      //   .split(/\n\s*\n/)
+
+      // fetch(subtitleSrc)
+      //   .then((response) => response.text())
+      //   .then((data) => {
+      //     // Parse the SRT file into an array of subtitle objects
+      //     const subtitles = data
+      //       .trim()
+      //       .split("\n\n")
+
+     const subtitles = subtitleSrc.trim()
+        .split(/\n\s*\n/)
+            .map((subtitle) => {
               const [index, time, text] = subtitle?.split("\n");
               return {
                 index,
@@ -32,8 +43,8 @@ export default function NewFlipBook({audioSrc, subtitleSrc }) {
             });
 
           setSubtitles(subtitles);
-        };
-    
+   
+    }
 
   },[]);
 useEffect(() => { 
@@ -106,6 +117,7 @@ useEffect(() => {
   const handleAudioTimeUpdate = (event) => {
 
     const currentTime = event.target.currentTime;
+    setPausedTime(currentTime)
     setTime(currentTime);
     
     const newSubtitleIndex = subtitles.findIndex((subtitle) => {
@@ -128,10 +140,15 @@ useEffect(() => {
     setDuration(duration);
   }
 
+  const handlePlayPause = (e) => {
+    e.target.currentTime = audioTime;
+
+  }
+ 
   const currentSubtitle = subtitles[currentSubtitleIndex];
 
   return (
-    <div className=" flex flex-col items-center pb-10  h-full relative rounded-md  pt-5">
+    <div className=" flex flex-col items-center pb-10 w-[93%] h-full relative rounded-md  pt-5">
       <ReactAudioPlayer
         ref={audioRef}
         current
@@ -139,28 +156,30 @@ useEffect(() => {
         src= {`data:audio/wav;base64,${audioSrc}`}
         type="audio/wav"
         onLoadedMetaData={handleLoadMetadata}
-        className="mb-5 w-full "
+        className="mb-4 "
+        onLoadStart={handlePlayPause}
         controls
       />
 
 
+    <div >
       <FlipPage
         ref={audioRef}
         flipOnTouchZone={0.8}
         uncutPages={true}
         orientation="horizontal"
-        width={1260}
+        // responsive={true}
         className="flip"
+        width={1100}
         style={{
           padding: "0",
-          margin: " 0",
+          margin: "0",
         }}
         showTouchHint
         height={720}
         animationDuration="1000"
       >
-        
-      
+     
 
         {pages.map((page, pindex) => (
           <article
@@ -171,7 +190,7 @@ useEffect(() => {
             {page.content.map((subtitle, index) => {
             
               return (
-                <div className= "w-1/2 text-left">
+                <div className=  " md:w-[45%] text-left">
                   <p
                     key={index}
                     className={`p-2 ${
@@ -186,9 +205,9 @@ useEffect(() => {
               );
             })}
 
-            <div className="absolute right_image bg-white left-1/2 top-0 ">
+            <div className="absolute right_image bg-white left-[50%] top-0 ">
               <img
-                className="object-contain object-center h-full pt-5 pb-5"
+                className="object-cover h-full object-center py-5 px-10"
                 src="https://images.pexels.com/photos/3662839/pexels-photo-3662839.jpeg?auto=compress&cs=tinysrgb&w=1600"
                 alt=""
               />
@@ -199,6 +218,7 @@ useEffect(() => {
      
 
       </FlipPage>
+      </div>
     </div>
   );
 }

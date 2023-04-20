@@ -9,6 +9,7 @@ import Dropdown from "../components/Dropdown";
 import NewFlipBook from "../components/NewFlipBook";
 import Swal from "sweetalert2";
 import Boy from '../images/boy.png'
+import Music from "../result.mp3";
 
 const baseUrl = "http://localhost:4000/";
 
@@ -20,9 +21,6 @@ function ConvertFile() {
   const [loading, setLoading] = useState(true);
   const [processing, setProcessing] = useState(false);
   const [saveType, setSaveType]  = useState("personal");
-
-
-  console.log(saveType);
 
   const [{ user }, dispatch] = useStateValue();
 
@@ -178,60 +176,33 @@ function ConvertFile() {
   return (
     <div>
       <div
-        className="flex bg-image p-10 "
-      >
-        <div className="relative ml-10 h-[50rem] mt-10 convert-image p-4  flex flex-col justify-between rounded  w-[40rem] ">
-          <div className="text-center pr-20">
-          <h1 className=" text-5xl pt-36 border-2 ">{name}</h1>
+        className="flex bg-image p-5">
+        <div className="relative ml-10 mt-10 convert-image p-4 flex flex-col justify-between rounded min-w-[20rem] w-[40rem]  ">
+          <div className="text-center">
+          <h1 className=" text-lg pt-12 md:text-md md:pt-20 lg:text-2xl lg:pt-24 xl:text-3xl xl:pt-28 border-2 ">{name}</h1>
           <Dropdown handleSpeed={handleSpeed} />
           </div>
 
-          <div className="flex  justify-between items-center">
+          <div className=" flex justify-between items-center">
 
           {
             loading ? (
               <button
                 onClick={() => ConvertTextToSpeech(textValue)}
-              className="absolute border bottom-64 left-48 yellow w-40 text-xl py-2 px-3 h-fit  rounded-2xl   cursor-pointer"
+              className="absolute md:bottom-0 md:text-sm lg:bottom-[30%] lg:left-[40%] lg:text-[1.1rem] lg:w-24 yellow text-xl py-2 px-3 h-fit  rounded-2xl   cursor-pointer"
             >
               Convert
             </button>
             ) : (
-              <div
-              onMouseEnter={() => setIsMenu(true)}
-              onMouseLeave={() => setIsMenu(false)}
-              className="relative "
-            >
-              <div className=" text-center text-white ">
+
                 <button
                   onClick={() => Saveaudioandtext(name, speed, user)}
-                  className="relative border bottom-64 left-44 yellow w-40 text-xl py-2 px-3 h-fit  rounded-2xl cursor-pointer"
+                  className="absolute md:bottom-[63%] md:left-[39%] md:text-sm lg:bottom-[35%] lg:left-[38%] lg:text-[1.1rem] lg:w-24 yellow text-xl py-2 px-3 h-fit  rounded-2xl   cursor-pointer"
                 >
                   Save
                 </button>
-              </div>
-
-              {isMenu && (
-                <motion.div
-                  initial={{ opacity: 0, y: 50 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 50 }}
-                  className="absolute z-10  flex flex-col p-3 gap-2 top-[-14rem] left-72  w-44 cursor-pointer bg-gray-50 shadow-lg rounded-lg backdrop-blur-sm"
-                >
-                  <div>
-                    <p onClick={() => setSaveType("public")} className=" text-black text-lg  hover:font-semibold duration-150 transition-all ease-in-out">
-                      Public
-                    </p>
-                  </div>
-                  <hr />
-                  <div>
-                    <p onClick={() => setSaveType("personal")}  className="text-black text-lg hover:font-semibold duration-150 transition-all ease-in-out">
-                      Personal
-                    </p>
-                  </div>
-                </motion.div>
-              )}
-            </div>
+              
+            
             )
           }
             
@@ -243,7 +214,7 @@ function ConvertFile() {
         <div className="">
         <div
           role="status"
-          className="orange flex flex-col justify-center items-center rounded-3xl mx-10 h-full mt-10 w-[77rem]  px-10  "
+          className="orange flex flex-col justify-center items-center rounded-3xl mx-10 h-full mt-10 w-[95%]  px-10  "
         >
         {
           loading && processing ? (<>
@@ -270,7 +241,7 @@ function ConvertFile() {
           ):(
             <>
             <p className="text-3xl text-white mb-10">Click on convert to process the text into audio </p>
-            <img src={Boy} alt="" />
+            <img src={Boy} alt="loading" className="object-fit" />
             </>
           )
         }
@@ -278,13 +249,15 @@ function ConvertFile() {
           </div>
         </div>
       ) : (
-        <div className={`fade-in-out text-white rounded-3xl mx-10 ok mt-4 w-11/12 h-full px-10`}>
-          <div className="  justify-start">
+        <div className={`fade-in-out text-white rounded-3xl ok mt-4 h-full mx-24 px-10`}>
+          <div className="">
             {url && srt && (
-              <NewFlipBook audioSrc={url.src} subtitleSrc={srt} />
+              <NewFlipBook audioSrc={url} subtitleSrc={srt} />
+
             )}
           </div>
-          </div>      )}
+          </div>      
+          )}
     </div>
     </div>
   );

@@ -1,6 +1,6 @@
 import React,{useState} from "react";
 import { useLocation } from "react-router";
-import img from "../images/blog1.jpg";
+import img from "../images/1.jpg";
 import { BlogData } from "../data";
 
 function Blog() {
