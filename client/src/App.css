@@ -19,10 +19,9 @@
 
 .convert-image{
   background-image: url("./images/convert.png");
-  /* object-fit: contain; */
-  
-  background-size: contain;
-  background-repeat: no-repeat;
+  object-fit: contain;
+    background-size: contain;
+    background-repeat: no-repeat;
 }
 
 .shelf-bg {
@@ -42,9 +41,7 @@
 
 .right_image{
   height: 720px;
-  width: 50%;
   box-shadow: -5px 0px 10px 1px #aaaaaa;
-  padding-left: 9.5rem;
 }
 
 .yellow {

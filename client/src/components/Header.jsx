@@ -4,7 +4,10 @@ import { useStateValue } from "../context/StateProvider";
 import { NavLink, useNavigate } from "react-router-dom";
 import { auth } from "../config/firebase.config";
 import { motion } from "framer-motion";
+
+
 function Header() {
+
   const [{ user }, dispatch] = useStateValue();
   const [isMenu, setIsMenu] = useState(false);
   const navigate = useNavigate();
@@ -45,7 +48,7 @@ function Header() {
       <div
         onMouseEnter={() => setIsMenu(true)}
         onMouseLeave={() => setIsMenu(false)}
-        className="flex gap-2 ml-auto    {user ? ( items-center relative"
+        className="flex gap-2 ml-auto items-center relative"
       >
         
         {user ? (
@@ -71,11 +74,7 @@ function Header() {
                 Profile
               </p>
             </NavLink>
-            <NavLink to={"/savedlibrary"}>
-              <p className=" text-base text-gray-600 hover:font-semibold duration-150 transition-all ease-in-out">
-                My library
-              </p>
-            </NavLink>
+          
             <hr />
             <p
               onClick={logOut}

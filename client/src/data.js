@@ -1,7 +1,7 @@
-import img1 from "./images/blog1.jpg";
-import img2 from "./images/blog2.jpg";
-import img3 from "./images/blog3.jpeg";
-import img4 from "./images/blog4.jpeg";
+import img1 from "./images/1.jpg";
+import img2 from "./images/2.jpg";
+import img3 from "./images/3.jpg";
+import img4 from "./images/4.jpg";
 
 const data1 = (
   <p className="text-xl text-left mx-44">
