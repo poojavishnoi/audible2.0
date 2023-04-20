@@ -11,7 +11,7 @@ router.post("/save", upload.fields([{ name: 'audio', maxCount: 1 }, { name: 'srt
   const { audio, srt } = req.files;
   const visibility = true
   const listeners = [{author_email, paused: 0}]
-  const audioData = audio[0].buffer
+  const audioData = audio[0].buffer.toString('base64');
   const srtData = srt[0].buffer.toString('base64');
   const newAudio = new Audio({
     file_name,
@@ -169,7 +169,7 @@ router.put("/updatePaused/:id", async(req,res) => {
       },
       options
     )
-
+      console.log("result: ", result);
     return res.status(200).send({success: true, data : result})
   } catch (error) {
     return res.status(400).send({success:false, msg:error})

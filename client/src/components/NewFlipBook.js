@@ -13,8 +13,9 @@ export default function NewFlipBook( {setPausedTime,audioTime, audioSrc, subtitl
   const [pages, setPages] = useState([]);
   const [time, setTime] = useState(0);
   const characterLimit = 600;
-  const [duration, setDuration] = useState(0);
+  const [duration, setDuration] = useState('');
 
+console.log(audioTime, "audioTime");
 
   useEffect(() => {
     if (typeof subtitleSrc !== "object") {
@@ -48,8 +49,15 @@ export default function NewFlipBook( {setPausedTime,audioTime, audioSrc, subtitl
 
   },[]);
 useEffect(() => { 
+  if(typeof audioSrc !== "object"){
+    setDuration(`data:audio/wav;base64,${audioSrc}`)
+  }
+  else{
+    setDuration(audioSrc.src)
+
+  }
   subtitles? pageDistribution() : <>  </>
-}, [subtitles]);
+}, [subtitles, audioSrc]);
 
   useEffect(() => {
 
@@ -113,13 +121,10 @@ useEffect(() => {
     return timeInSeconds;
   };
 
-
   const handleAudioTimeUpdate = (event) => {
-
     const currentTime = event.target.currentTime;
     setPausedTime(currentTime)
     setTime(currentTime);
-    
     const newSubtitleIndex = subtitles.findIndex((subtitle) => {
       return subtitle.start <= currentTime && subtitle.end >= currentTime;
     });
@@ -135,10 +140,10 @@ useEffect(() => {
     return <div>Loading subtitles...</div>;
   }
 
-  const handleLoadMetadata = (meta) => {
-    const {duration} = meta.target;
-    setDuration(duration);
-  }
+  // const handleLoadMetadata = (meta) => {
+  //   const {duration} = meta.target;
+  //   setDuration(duration);
+  // }
 
   const handlePlayPause = (e) => {
     e.target.currentTime = audioTime;
@@ -153,12 +158,15 @@ useEffect(() => {
         ref={audioRef}
         current
         onListen={handleAudioTimeUpdate}
-        src= {`data:audio/wav;base64,${audioSrc}`}
+        //  src= {`data:audio/wav;base64,${audioSrc}`}
+        //src={audioSrc.src}
+        src={duration}
         type="audio/wav"
-        onLoadedMetaData={handleLoadMetadata}
+        //onLoadedMetaData={handleLoadMetadata}
         className="mb-4 "
         onLoadStart={handlePlayPause}
         controls
+        autoPlay = {false}
       />
 
 
