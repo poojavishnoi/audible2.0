@@ -2,17 +2,38 @@ const router = require('express').Router()
 const { log } = require('console');
 const multer = require('multer');
 const { listeners } = require('../models/audio');
-const upload = multer();
+const upload = multer({
+  limits: {
+    fieldNameSize: 100, // increase the maximum allowed field name size
+    fieldSize: 1024 * 1024 * 10 // increase the maximum allowed field value size
+  }
+});
 const Audio = require('../models/audio')
+const request = require("request");
 
 router.post("/save", upload.fields([{ name: 'audio', maxCount: 1 }, { name: 'srt', maxCount: 1 }]), async(req,res) => {
   const { image, file_name, file, file_type, author_email, quality, text} = req.body;
-  console.log("req.body: ", req.body);
+  //console.log("req.body: ", req.body);
   const { audio, srt } = req.files;
   const visibility = true
   const listeners = [{author_email, paused: 0}]
   const audioData = audio[0].buffer.toString('base64');
   const srtData = srt[0].buffer.toString('base64');
+  console.log("summary", req.body.summary_audio);
+  console.log("summary", req.body.summary_text);
+  // const textValue = req.body.text; 
+  //     let summary = '';
+  //     console.log("converting text::::::::", textValue);
+  //     const response = await request.post('http://127.0.0.1:5000/summarise',
+  //     {json:{text:textValue}})
+  //     .on('data', (data) => {
+  //       summary += data;
+  //     })
+  //     .on('end', () => {
+  //       console.log("summary", summary);
+        
+  //       // res.json({ summary: summary });
+  //     });
   const newAudio = new Audio({
     file_name,
     file,
@@ -24,6 +45,8 @@ router.post("/save", upload.fields([{ name: 'audio', maxCount: 1 }, { name: 'srt
     listeners,
     audio: audioData,
     srt: srtData,
+    summary_text: req.body.summary_text,
+    summary_audio: req.body.summary_audio,
     text
   });
   console.log("newAudio: ", newAudio);
@@ -105,6 +128,8 @@ router.get("/getPublicLibrary", async(req,res) => {
     author_email: true,
     visibility: true,
     listeners: true,
+    summary_text: true,
+    summary_audio: true,
   }
 
   const data = await Audio.find(filter, options);

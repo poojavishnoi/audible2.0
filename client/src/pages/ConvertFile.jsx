@@ -24,7 +24,8 @@ function ConvertFile() {
   const [audioTime, setAudioTime] = useState(0);
   const [pausedTime, setPausedTime] = useState(audioTime);
   const [{ user }, dispatch] = useStateValue();
-
+  const [summaudio, setSummaudio] = useState([]);
+  const [summary, setSummary] = useState([]);
   const [url, setUrl] = useState([]);
   const [speed, setSpeed] = useState("slow");
   const [srt, setSrt] = useState([]);
@@ -104,6 +105,23 @@ function ConvertFile() {
 
   const Saveaudioandtext = async (name, speed, user) => {
     try {
+
+      const response = await axios
+        .post(
+          `${baseUrl}api/convert/summarise`,
+          {
+            text: JSON.stringify(textValue),
+          },
+          {
+            headers: { "Content-Type": "application/json" },
+          }
+        )
+        .then(async (resp) => {
+          setSummaudio(resp.data.summary.audio);
+          setSummary(resp.data.summary.text);
+        })
+        .catch((error) => console.error(error));
+
       console.log(name, extention);
       const formData = new FormData();
       // Append the audio and zip files to the form data
@@ -121,7 +139,9 @@ function ConvertFile() {
       formData.append("file_type", extention);
       formData.append("image", image);
       formData.append("text", JSON.stringify(textValue));
-      console.log(formData, "formdata");
+
+      formData.append("summary_audio", summaudio);
+      formData.append("summary_text", summary);
       await axios
         .post(`${baseUrl}api/mongi/save`, formData, {
           headers: { "Content-Type": "multipart/form-data" },

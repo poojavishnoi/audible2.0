@@ -39,7 +39,11 @@ const AudioSchema = mongoose.Schema({
     type: String,
     required: true
   },
-  summary: {
+  summary_text: {
+    type: String,
+    required: false
+  },
+  summary_audio:{
     type: String,
     required: false
   },

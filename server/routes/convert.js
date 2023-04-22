@@ -62,14 +62,14 @@ router.post("/summarise", async (req, res) => {
     try{
       const textValue = req.body.text; 
       let summary = '';
-      console.log("converting text::::::::");
+      console.log("converting text::::::::", textValue);
       const response = await request.post('http://127.0.0.1:5000/summarise',
       {json:{text:textValue}})
       .on('data', (data) => {
         summary += data;
       })
       .on('end', () => {
-        console.log("summary", summary);
+        summary =JSON.parse(summary);
         res.json({ summary: summary });
       });
     }
