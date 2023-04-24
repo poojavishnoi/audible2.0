@@ -13,8 +13,9 @@ export default function NewFlipBook( {setPausedTime,audioTime, audioSrc, subtitl
   const [pages, setPages] = useState([]);
   const [time, setTime] = useState(0);
   const characterLimit = 600;
-  const [duration, setDuration] = useState(0);
+  const [duration, setDuration] = useState('');
 
+console.log(audioTime, "audioTime");
 
   useEffect(() => {
     if (typeof subtitleSrc !== "object") {
@@ -47,21 +48,25 @@ export default function NewFlipBook( {setPausedTime,audioTime, audioSrc, subtitl
     }
 
   },[]);
-
 useEffect(() => { 
+  if(typeof audioSrc !== "object"){
+    setDuration(`data:audio/wav;base64,${audioSrc}`)
+  }
+  else{
+    setDuration(audioSrc.src)
+
+  }
   subtitles? pageDistribution() : <>  </>
-}, [subtitles]);
+}, [subtitles, audioSrc]);
 
   useEffect(() => {
 
     for (let index = 0; index < pages.length; index++) {
 
      if (time > pages[index].content.slice(-1)[0].end) {
-        console.log("nice1");
         audioRef.current.gotoNextPage();
       }
       if (time < pages[index].content[0].start) {
-        console.log("nice2");
         audioRef.current.gotoPreviousPage();
       }
     }
@@ -116,13 +121,10 @@ useEffect(() => {
     return timeInSeconds;
   };
 
-
   const handleAudioTimeUpdate = (event) => {
-
     const currentTime = event.target.currentTime;
     setPausedTime(currentTime)
     setTime(currentTime);
-    
     const newSubtitleIndex = subtitles.findIndex((subtitle) => {
       return subtitle.start <= currentTime && subtitle.end >= currentTime;
     });
@@ -138,10 +140,10 @@ useEffect(() => {
     return <div>Loading subtitles...</div>;
   }
 
-  const handleLoadMetadata = (meta) => {
-    const {duration} = meta.target;
-    setDuration(duration);
-  }
+  // const handleLoadMetadata = (meta) => {
+  //   const {duration} = meta.target;
+  //   setDuration(duration);
+  // }
 
   const handlePlayPause = (e) => {
     e.target.currentTime = audioTime;
@@ -156,11 +158,15 @@ useEffect(() => {
         ref={audioRef}
         current
         onListen={handleAudioTimeUpdate}
-        src={audioSrc}
-        onLoadedMetaData={handleLoadMetadata}
+        //  src= {`data:audio/wav;base64,${audioSrc}`}
+        //src={audioSrc.src}
+        src={duration}
+        type="audio/wav"
+        //onLoadedMetaData={handleLoadMetadata}
         className="mb-4 "
         onLoadStart={handlePlayPause}
         controls
+        autoPlay = {false}
       />
 
 

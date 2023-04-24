@@ -13,6 +13,7 @@ function PublicLibrary() {
   const [loading, setLoading] = useState(true);
   const [{ user }, dispatch] = useStateValue();
   const [text, setText] = useState("");
+  const [currentAudio, setCurrentAudio] = useState(null);
   const navigate = useNavigate();
 
   console.log(books, "Books");
@@ -21,8 +22,8 @@ function PublicLibrary() {
     if (user != null || user != undefined) {
       try {
         if (loading) {
-          const response = await fetch(`${baseUrl}api/mongi/getPublicLibrary`);
-          const data = await response.json();
+          const response = await fetch(`${baseUrl}api/mongi/getPublicLibrary`)
+          const data = await response.json()
           for (let i = 0; i < data.audio.length; i++) {
             data.audio[i].summa = false;
           }
@@ -37,14 +38,38 @@ function PublicLibrary() {
 
   const flipLogic = (id) => {
     let newBooks = { ...books };
+    
     for (let i = 0; i < newBooks.audio.length; i++) {
       if (newBooks.audio[i]._id == id) {
         newBooks.audio[i].summa = !newBooks.audio[i].summa;
+        console.log(newBooks.audio[i].summary_text);
+  
+        // Pause the currently playing audio (if any)
+        if (currentAudio) {
+          currentAudio.pause();
+        }
+  
+        // Play the new audio
+        let audio = new Audio(`data:audio/wav;base64,${newBooks.audio[i].summary_audio}`);
+        if (newBooks.audio[i].summa) {
+          audio.play();
+        }
+  
+        // Set the current audio to the new audio
+        setCurrentAudio(audio);
       }
     }
-    console.log(books, "Books");
+  
+    console.log(newBooks, "Books");
     setBooks(newBooks);
   };
+  
+
+  // const playSummary = (id) => {
+  //   let newBooks = { ...books };
+  //   let audio = new Audio(duration);
+  //   audio.play();
+  // }
 
   const AudioPlay = (id) => {
     navigate("/listen", {
@@ -61,7 +86,7 @@ function PublicLibrary() {
       axios.put(`${baseUrl}api/mongi/addListeners/${id}`, {
         listeners: {
           email: user.user.email,
-          paused: "00.09",
+          paused: "00",
         },
       });
     } catch (error) {
@@ -140,6 +165,7 @@ function PublicLibrary() {
                         <p className="text-xs text-justify text-black">
                           Author Book
                         </p>
+                        {/* < audio src={duration} className=""/> */}
                         <p className="text-xs text-justify text-black">
                           Duration
                         </p>

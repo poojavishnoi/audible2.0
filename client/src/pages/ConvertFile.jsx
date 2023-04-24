@@ -18,12 +18,14 @@ function ConvertFile() {
     state: { name, textValue, extention, file, image },
   } = useLocation();
 
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [processing, setProcessing] = useState(false);
   const [saveType, setSaveType]  = useState("personal");
-
+  const [audioTime, setAudioTime] = useState(0);
+  const [pausedTime, setPausedTime] = useState(audioTime);
   const [{ user }, dispatch] = useStateValue();
-
+  const [summaudio, setSummaudio] = useState([]);
+  const [summary, setSummary] = useState([]);
   const [url, setUrl] = useState([]);
   const [speed, setSpeed] = useState("slow");
   const [srt, setSrt] = useState([]);
@@ -88,10 +90,8 @@ function ConvertFile() {
           const wavBlob = await wavFile.async("blob");
           const srtText = await srtFile.async("text");
           setaudioblob(wavBlob);
-          console.log(typeof srtText + " srt-text");
-
-          const audio = new Audio(URL.createObjectURL(wavBlob));
-
+          const acb = URL.createObjectURL(wavBlob)
+          const audio = new Audio(acb);
           // Set the state to update the URL and SRT text
           setUrl(audio);
           setSrt(srtText);
@@ -105,6 +105,23 @@ function ConvertFile() {
 
   const Saveaudioandtext = async (name, speed, user) => {
     try {
+
+      const response = await axios
+        .post(
+          `${baseUrl}api/convert/summarise`,
+          {
+            text: JSON.stringify(textValue),
+          },
+          {
+            headers: { "Content-Type": "application/json" },
+          }
+        )
+        .then(async (resp) => {
+          setSummaudio(resp.data.summary.audio);
+          setSummary(resp.data.summary.text);
+        })
+        .catch((error) => console.error(error));
+
       console.log(name, extention);
       const formData = new FormData();
       // Append the audio and zip files to the form data
@@ -122,7 +139,9 @@ function ConvertFile() {
       formData.append("file_type", extention);
       formData.append("image", image);
       formData.append("text", JSON.stringify(textValue));
-      console.log(formData, "formdata");
+
+      formData.append("summary_audio", summaudio);
+      formData.append("summary_text", summary);
       await axios
         .post(`${baseUrl}api/mongi/save`, formData, {
           headers: { "Content-Type": "multipart/form-data" },
@@ -174,11 +193,12 @@ function ConvertFile() {
     }
   };
 
+
   return (
     <div>
       <div
-        className="flex bg-image p-5">
-        <div className="relative ml-10 mt-10 convert-image p-4 flex flex-col justify-between rounded min-w-[20rem] w-[40rem]  ">
+        className="flex bg-image p-5 items-center">
+        <div className="relative ml-10 mt-10 convert-image p-4 flex flex-col justify-between rounded min-w-[20rem] w-[40rem] h-[30rem]">
           <div className="text-center">
           <h1 className=" text-lg pt-12 md:text-md md:pt-20 lg:text-2xl lg:pt-24 xl:text-3xl xl:pt-28 border-2 ">{name}</h1>
           <Dropdown handleSpeed={handleSpeed} />
@@ -190,7 +210,7 @@ function ConvertFile() {
             loading ? (
               <button
                 onClick={() => ConvertTextToSpeech(textValue)}
-              className="absolute md:bottom-0 md:text-sm lg:bottom-[30%] lg:left-[40%] lg:text-[1.1rem] lg:w-24 yellow text-xl py-2 px-3 h-fit  rounded-2xl   cursor-pointer"
+              className="absolute md:bottom-0 md:text-sm lg:bottom-[34%] lg:left-[35%] lg:text-[1.1rem] lg:w-24 yellow text-xl py-2 px-3 h-fit  rounded-2xl   cursor-pointer"
             >
               Convert
             </button>
@@ -215,7 +235,7 @@ function ConvertFile() {
         <div className="">
         <div
           role="status"
-          className="orange flex flex-col justify-center items-center rounded-3xl mx-10 h-full mt-10 w-[95%]  px-10  "
+          className="orange flex flex-col justify-center items-center rounded-3xl mx-10 h-[40rem] mt-10 w-[65rem]  px-10  "
         >
         {
           loading && processing ? (<>
@@ -241,7 +261,7 @@ function ConvertFile() {
           </>
           ):(
             <>
-            <p className="text-3xl text-white mb-10">Click on convert to process the text into audio </p>
+            <p className="text-3xl text-white mb-1">Click on convert to process the text into audio </p>
             <img src={Boy} alt="loading" className="object-fit" />
             </>
           )
@@ -253,7 +273,7 @@ function ConvertFile() {
         <div className={`fade-in-out text-white rounded-3xl ok mt-4 h-full mx-24 px-10`}>
           <div className="">
             {url && srt && (
-              <NewFlipBook audioSrc={url} subtitleSrc={srt} />
+              <NewFlipBook setPausedTime={setPausedTime} audioTime={audioTime} audioSrc={url} subtitleSrc={srt} />
 
             )}
           </div>

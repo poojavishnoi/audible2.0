@@ -1,21 +1,17 @@
 import React, { useEffect } from "react";
 import { useLocation } from "react-router";
 import { useStateValue } from "../context/StateProvider";
-import JSZip, { filter } from "jszip";
 import axios from "axios";
 import { useState } from "react";
-import Music from "../result.mp3";
-import { motion } from "framer-motion";
-import SubtitlePlayer from "./SubtitlePlayer";
-import Dropdown from "../components/Dropdown";
 import NewFlipBook from "../components/NewFlipBook";
 import Swal from "sweetalert2";
-import Boy from "../images/boy.png";
 
 const baseUrl = "http://localhost:4000/";
 
 function Listen() {
   const [{ user }, dispatch] = useStateValue();
+  const [url, setUrl] = useState(null)
+  const [srt, setSrt] = useState(null)
   const [audioBook, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [audioTime, setAudioTime] = useState(0);
@@ -24,65 +20,70 @@ function Listen() {
     state: { id },
   } = useLocation();
 
-useEffect(()  => {
+// useEffect(()  => {
   
-  if(audioBook){
-    const filteredData = audioBook?.audio?.listeners?.find((item) => item.email === user?.user?.email);
-    console.log(filteredData, "filteredData");
-    setAudioTime(filteredData?.paused)
+//   if(audioBook){
+//     const filteredData = audioBook?.audio?.listeners?.find((item) => item.email === user?.user?.email);
+//     console.log(filteredData, "filteredData");
+//     setAudioTime(filteredData?.paused)
 
-  }
-  setPausedTime(audioTime)
- } , [audioBook,audioTime, user])
+//   }
+//  } , [audioTime])
 
-  window.addEventListener('beforeunload', (event) => {
-      updatePaused(id)
-      // Cancel the event as stated by the standard.
-      event.preventDefault();
-      // Chrome requires returnValue to be set.
-      event.returnValue = '';
-      
-    })
-
-  // window.addEventListener('beforeunload', (event) => {
-  //   updatePaused(id)
-  //   // Cancel the event as stated by the standard.
-  //   event.preventDefault();
-  //   // Chrome requires returnValue to be set.
-  //   event.returnValue = '';
-    
-  // });
-
-  const updatePaused = async (id) => {
-    console.log("clicked", id);
-
+ useEffect(() => {
+  const handleUnload = () => {
+    console.log("clicked", pausedTime);
+    //updatePaused(id,pausedTime);
     try {
       axios.put(`${baseUrl}api/mongi/updatePaused/${id}`, {
-          email: "pooja.k.vishnoi@gmail.com",
-          paused: `${pausedTime?.toFixed(2)}`,
-        
+        email: user?.user?.email,
+        paused: `${pausedTime?.toFixed(2)}`,
       });
     } catch (error) {
-      console.log(error);
+      console.log(error); 
     }
   };
 
-  console.log(audioTime, "audioTime");
-  console.log(pausedTime, "pausedTime");
+  window.addEventListener('beforeunload', handleUnload);
+
+  return () => {
+    window.removeEventListener('beforeunload', handleUnload);
+  };
+}, [pausedTime]);
+
+// const updatePaused = async (id,paused) => {
+//   console.log(pausedTime, "pausedTime in event" );
+
+//   try {
+//     axios.put(`${baseUrl}api/mongi/updatePaused/${id}`, {
+//       email: user?.user?.email,
+//       paused: `${paused?.toFixed(2)}`,
+//     });
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
+
+  console.log(pausedTime, "poserTime");
 
   const getAudioBook = async () => {
     if (user != null || user !== undefined) {
       try {
-        // console.log(user.user.email, "user")
         if (loading) {
-          const response = await fetch(`${baseUrl}api/mongi/getBook/${id}`);
-          const data = await response.json();
-          // for (let i = 0; i < data.audio.length; i++) {
-          //   data.audio[i].summa = false
-          // }
-          console.log(data);
-          setBooks(data);
-          setLoading(false);
+          const response = await fetch(`${baseUrl}api/mongi/getBook/${id}`)
+          const data = await response.json()
+          console.log(data, "data");
+          const audioBlob = data.audio.audio;
+          console.log(data.audio.srt, "srt");
+          const srtText = data.audio.srt;
+          setUrl(audioBlob);
+          setSrt(srtText);
+          setBooks(data)
+          setLoading(false)
+          console.log(user?.user?.email)
+          const filteredData = data?.audio?.listeners?.find((item) => item.email === user?.user?.email);
+    console.log(filteredData, "filteredData");
+    setAudioTime(filteredData?.paused)
         }
       } catch (error) {
         console.log(error);
@@ -111,10 +112,23 @@ useEffect(()  => {
     <div className="flex flex-col items-center bg-image p-10">
       <h1 className=" text-4xl  py-4 ">{audioBook.audio?.file_name}</h1>
 
-      <div className=" text-white rounded-3xl mx-10 ok mt-4 w-11/12 h-full px-10">
-        {/* <div className="  justify-center">
-            <NewFlipBook audioSrc={audioBook?.audio?.audio} subtitleSrc={audioBook?.audio?.srt} />
+      {/* <div className=" text-white rounded-3xl mx-10 ok mt-4 w-11/12 h-full px-10">
+        <div className="  justify-center">
+          { srt && (
+            <NewFlipBook audioSrc={url} subtitleSrc={srt} />
+          )}
         </div> */}
+        {/*}
+        <div className="my-4 text-black">
+              <h1 className=" text-2xl">{name}</h1>
+              {/* <Dropdown handleSpeed={handleSpeed}/> */}
+        {/* <button
+                onClick={() => ConvertTextToSpeech(textValue)}
+                className="border px-2 my-4 rounded-md cursor-pointer"
+              >
+                Convert
+              </button> 
+            </div> */}
 
         {loading ? (
           <div className="">
@@ -150,11 +164,11 @@ useEffect(()  => {
             className={`fade-in-out text-white rounded-3xl mx-10 ok mt-4 w-11/12 h-full px-10`}
           >
             <div className="  justify-start">
-              <NewFlipBook setPausedTime={setPausedTime} audioTime={audioTime} audioSrc={audioBook?.audio?.audio} subtitleSrc={audioBook?.audio?.srt} />
+              <NewFlipBook setPausedTime={setPausedTime} audioTime={audioTime} audioSrc={url} subtitleSrc={srt} />
             </div>
           </div>
         )}
-      </div>
+      {/* </div> */}
     </div>
   );
 }
