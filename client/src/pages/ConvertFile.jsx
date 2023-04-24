@@ -49,6 +49,7 @@ function ConvertFile() {
             speed: speed,
             name: name,
             file: file,
+            lan: "en",
           },
           {
             headers: { "Content-Type": "application/json" },

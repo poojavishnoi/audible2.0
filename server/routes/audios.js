@@ -50,20 +50,20 @@ router.post("/save", upload.fields([{ name: 'audio', maxCount: 1 }, { name: 'srt
     text
   });
   console.log("newAudio: ", newAudio);
-  try{
-    const exists = await Audio.find({file_name: file_name, author_email: author_email})
-    if(exists>0){
-      console.log("File already exists", exists);
-      return res.send({success: false, message: "File already exists"})
-    }
-    else{
-      const savedAudio = await newAudio.save();
-      return res.status(200).send({success: true, audio: savedAudio})
-    }
+  // try{
+  //   const exists = await Audio.find({file_name: file_name, author_email: author_email})
+  //   if(exists>0){
+  //     console.log("File already exists", exists);
+  //     return res.send({success: false, message: "File already exists"})
+  //   }
+  //   else{
+  //     const savedAudio = await newAudio.save();
+  //     return res.status(200).send({success: true, audio: savedAudio})
+  //   }
     
-  }catch(error){
-    return res.status(400).send({success: false, msg:error})
-  }
+  // }catch(error){
+  //   return res.status(400).send({success: false, msg:error})
+  // }
 
   // console.log("srt:-----------------\n", srtFile);
   // const newSong = song({
