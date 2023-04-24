@@ -46,7 +46,6 @@ function Home() {
     setImgUrl(imgUrl);
   };
 
-  console.log(imgUrl);
 
   const convertFile = async () => {
     if (
@@ -133,10 +132,12 @@ function Home() {
         linebreaks: true,
       });
 
-      console.log(doc.getThumbnail());
+      setTextValue(doc.getFullText());
+
     };
     reader.readAsArrayBuffer(file);
   };
+
 
   const [materialname, setmaterialname] = useState();
   const [material, setmaterial] = useState();
