@@ -31,6 +31,9 @@ function ConvertFile() {
   const [srt, setSrt] = useState([]);
   const [audioblob, setaudioblob] = useState([]);
   const [isMenu, setIsMenu] = useState(false);
+  const [audioDuration, setAudioDuration] = useState(0)
+
+  console.log(audioDuration, "audioDuration");
 
   const handleSpeed = (speed) => {
     setSpeed(speed);
@@ -273,7 +276,7 @@ function ConvertFile() {
         <div className={`fade-in-out text-white rounded-3xl ok mt-4 h-full mx-24 px-10`}>
           <div className="">
             {url && srt && (
-              <NewFlipBook setPausedTime={setPausedTime} audioTime={audioTime} audioSrc={url} subtitleSrc={srt} />
+              <NewFlipBook setAudioDuration={setAudioDuration} setPausedTime={setPausedTime} audioTime={audioTime} audioSrc={url} subtitleSrc={srt} />
 
             )}
           </div>

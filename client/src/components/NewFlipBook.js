@@ -5,7 +5,7 @@ import "react-h5-audio-player/lib/styles.css";
 import FlipPage from "react-flip-page";
 
 
-export default function NewFlipBook( {setPausedTime,audioTime, audioSrc, subtitleSrc }) {
+export default function NewFlipBook( {setAudioDuration,setPausedTime,audioTime, audioSrc, subtitleSrc }) {
 
   const audioRef = useRef(null);
   const [subtitles, setSubtitles] = useState([]);
@@ -14,8 +14,6 @@ export default function NewFlipBook( {setPausedTime,audioTime, audioSrc, subtitl
   const [time, setTime] = useState(0);
   const characterLimit = 600;
   const [duration, setDuration] = useState('');
-
-console.log(audioTime, "audioTime");
 
   useEffect(() => {
     if (typeof subtitleSrc !== "object") {
@@ -153,10 +151,10 @@ useEffect(() => {
     return <div>Loading subtitles...</div>;
   }
 
-  // const handleLoadMetadata = (meta) => {
-  //   const {duration} = meta.target;
-  //   setDuration(duration);
-  // }
+  const handleLoadMetadata = (meta) => {
+    const {duration} = meta.target;
+    setAudioDuration(duration);
+  }
 
   const handlePlayPause = (e) => {
     e.target.currentTime = audioTime;
@@ -175,7 +173,7 @@ useEffect(() => {
         //src={audioSrc.src}
         src={duration}
         type="audio/wav"
-        //onLoadedMetaData={handleLoadMetadata}
+        onLoadedMetaData={handleLoadMetadata}
         className="mb-4 "
         onLoadStart={handlePlayPause}
         controls
