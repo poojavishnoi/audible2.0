@@ -110,6 +110,10 @@ function UserProfile() {
                               : "absolute z-20 w-[21rem] h-[30rem] rounded-r-3xl transition-all duration-30000 rotate-y-180 origin-left"
                           }`}
                         >
+
+<h1 className="text-2xl absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white font-bold tracking-wider	 ">
+                          {book.file_name}
+                        </h1>
                           <img
                             src={`${book.image}`}
                             className="w-full h-full rounded-r-3xl"
