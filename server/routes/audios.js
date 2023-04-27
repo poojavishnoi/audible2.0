@@ -47,7 +47,9 @@ router.post("/save", upload.fields([{ name: 'audio', maxCount: 1 }, { name: 'srt
     srt: srtData,
     summary_text: req.body.summary_text,
     summary_audio: req.body.summary_audio,
-    text
+    text,
+    duration: req.body.duration,
+    language: req.body.language,
   });
   console.log("newAudio: ", newAudio);
   // try{

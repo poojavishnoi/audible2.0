@@ -19,8 +19,10 @@ function ConvertFile() {
   } = useLocation();
 
   const [loading, setLoading] = useState(true);
+  const [language, setLanguage] = useState("English")
+  const [lan, setLan] = useState("en")
   const [processing, setProcessing] = useState(false);
-  const [saveType, setSaveType]  = useState("personal");
+  const [saveType, setSaveType]  = useState(false);
   const [audioTime, setAudioTime] = useState(0);
   const [pausedTime, setPausedTime] = useState(audioTime);
   const [{ user }, dispatch] = useStateValue();
@@ -143,6 +145,7 @@ function ConvertFile() {
 
       formData.append("summary_audio", summaudio);
       formData.append("summary_text", summary);
+      formData.append("language", lan);
       await axios
         .post(`${baseUrl}api/mongi/save`, formData, {
           headers: { "Content-Type": "multipart/form-data" },
@@ -194,17 +197,39 @@ function ConvertFile() {
     }
   };
 
+  const languageHandler = () => {
+    if(language == "English"){
+      setLanguage("German")
+      setLan("ga")
+    }else{
+      setLanguage("English")
+      setLan("en")
+    }
+  }
 
+  const saveHandler = (e) => {
+    setSaveType(() => !saveType)
+  }
+ 
   return (
     <div>
       <div
         className="flex bg-image p-5 items-center">
-        <div className="relative ml-10 mt-10 convert-image p-4 flex flex-col justify-between rounded min-w-[20rem] w-[40rem] h-[30rem]">
+          <div className="flex ml-10 flex-col items-center ">
+          <button
+                onClick={languageHandler}
+              className={`${language === "English" ? "bg-black text-white" : "bg-white "} md:bottom-0 md:text-sm lg:w-32 text-xl py-3 px-3 h-fit rounded-2xl cursor-pointer`}
+            >
+              {language}
+            </button>
+        <div className="relative  mt-10 convert-image flex flex-col justify-between rounded min-w-[20rem] w-[20rem] h-[30rem]">  
           <div className="text-center">
           <h1 className=" text-lg pt-12 md:text-md md:pt-20 lg:text-2xl lg:pt-24 xl:text-3xl xl:pt-28 border-2 ">{name}</h1>
+          
+          <div className={`${language==="German" ? ' fade-out hidden' : "block fade-in-out" } `} >
           <Dropdown handleSpeed={handleSpeed} />
           </div>
-
+          </div>
           <div className=" flex justify-between items-center">
 
           {
@@ -219,7 +244,7 @@ function ConvertFile() {
 
                 <button
                   onClick={() => Saveaudioandtext(name, speed, user)}
-                  className="absolute md:bottom-[63%] md:left-[39%] md:text-sm lg:bottom-[35%] lg:left-[38%] lg:text-[1.1rem] lg:w-24 yellow text-xl py-2 px-3 h-fit  rounded-2xl   cursor-pointer"
+                  className="absolute md:bottom-[63%] md:left-[39%] md:text-sm lg:bottom-[35%] lg:left-[35%] lg:text-[1rem] lg:w-24 yellow text-xl py-1 px-3 h-fit  rounded-2xl   cursor-pointer"
                 >
                   Save
                 </button>
@@ -229,7 +254,13 @@ function ConvertFile() {
           }
             
           </div>
+
          
+        </div>
+        <div className="flex">
+        <input type="checkbox" onChange={saveHandler} className="mr-2" id="save" name="save"/>
+<label className="text-sm" for="save">Click here if you want to save the book publicly</label>
+</div>
         </div>
         
       {loading ?  (

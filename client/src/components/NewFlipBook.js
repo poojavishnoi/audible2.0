@@ -12,10 +12,10 @@ export default function NewFlipBook( {setPausedTime,audioTime, audioSrc, subtitl
   const [currentSubtitleIndex, setCurrentSubtitleIndex] = useState(-1);
   const [pages, setPages] = useState([]);
   const [time, setTime] = useState(0);
-  const characterLimit = 600;
+  const characterLimit = 500;
   const [duration, setDuration] = useState('');
 
-console.log(audioTime, "audioTime");
+console.log(subtitleSrc, "subtitles");
 
   useEffect(() => {
     if (typeof subtitleSrc !== "object") {
@@ -178,13 +178,13 @@ useEffect(() => {
         orientation="horizontal"
         // responsive={true}
         className="flip"
-        width={1100}
+        width={990}
         style={{
           padding: "0",
           margin: "0",
         }}
         showTouchHint
-        height={720}
+        height={620}
         animationDuration="1000"
       >
      
@@ -215,7 +215,7 @@ useEffect(() => {
 
             <div className="absolute right_image bg-white left-[50%] top-0 ">
               <img
-                className="object-cover h-full object-center py-5 px-10"
+                className="object-cover h-full object-center pt-4 pb-28 px-10"
                 src="https://images.pexels.com/photos/3662839/pexels-photo-3662839.jpeg?auto=compress&cs=tinysrgb&w=1600"
                 alt=""
               />
