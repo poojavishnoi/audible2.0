@@ -23,13 +23,16 @@ console.log(audioTime, "audioTime");
       // const subtitles = subtitleSrc.trim()
       //   .split(/\n\s*\n/)
 
-      fetch(subtitleSrc)
-        .then((response) => response.text())
-        .then((data) => {
-          // Parse the SRT file into an array of subtitle objects
-          const subtitles = data
-            .trim()
-            .split("\n\n")
+      // fetch(subtitleSrc)
+      //   .then((response) => response.text())
+      //   .then((data) => {
+      //     // Parse the SRT file into an array of subtitle objects
+      //     const subtitles = data
+      //       .trim()
+      //       .split("\n\n")
+
+     const subtitles = subtitleSrc.trim()
+        .split(/\n\s*\n/)
             .map((subtitle) => {
               const [index, time, text] = subtitle?.split("\n");
               return {
@@ -41,7 +44,7 @@ console.log(audioTime, "audioTime");
             });
 
           setSubtitles(subtitles);
-          });
+   
     }
 
   },[]);
@@ -55,9 +58,6 @@ useEffect(() => {
   }
   subtitles? pageDistribution() : <>  </>
 }, [subtitles, audioSrc]);
-
-
-console.log(pages, "pages");
 
 useEffect(() => {
   // Initialize currentPageIndex to 0
@@ -172,8 +172,8 @@ useEffect(() => {
         current
         onListen={handleAudioTimeUpdate}
         //  src= {`data:audio/wav;base64,${audioSrc}`}
-        src={audioSrc}
-        // src={duration}
+        //src={audioSrc.src}
+        src={duration}
         type="audio/wav"
         //onLoadedMetaData={handleLoadMetadata}
         className="mb-4 "
@@ -182,7 +182,6 @@ useEffect(() => {
         autoPlay = {false}
       />
 
-    
 
     <div >
       <FlipPage
@@ -192,7 +191,7 @@ useEffect(() => {
         orientation="horizontal"
         // responsive={true}
         className="flip"
-        width={1500}
+        width={1100}
         style={{
           padding: "0",
           margin: "0",
@@ -206,7 +205,7 @@ useEffect(() => {
         {pages.map((page, pindex) => (
           <article
             key={pindex}
-            className="p-7 relative text-center  flex flex-col text-black"
+            className="p-7 relative text-center flex flex-col text-black"
           >
 
             {page.content.map((subtitle, index) => {
@@ -220,8 +219,6 @@ useEffect(() => {
                         ? "font-bold text-red-800 text-3xl"
                         : "font-normal text-xl"
                     }`}
-
-                    
                   >
                     {subtitle?.text}
                   </p>
