@@ -146,6 +146,9 @@ function PublicLibrary() {
                             : "absolute z-20 w-[21rem] h-[30rem] rounded-r-3xl transition-all duration-30000 rotate-y-180 origin-left"
                         }`}
                       >
+                      <h1 className="text-2xl absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white font-bold tracking-wider	 ">
+                          {brok.file_name}
+                        </h1>
                         <img
                           src={`${brok.image}`}
                           className="w-full h-full rounded-r-3xl"
@@ -159,9 +162,9 @@ function PublicLibrary() {
                             : "p-2 absolute z-40 w-80 h-[28rem] bg-white rounded-l-3xl -translate-x-full transition-all duration-30000 border-r-2 shadow-xl border-r-gray-500"
                         }`}
                       >
-                        <h1 className="text-lg underline  text-center text-black">
+                        {/* <h1 className="text-lg underline  text-center text-black">
                           {brok.file_name}
-                        </h1>
+                        </h1> */}
                         <p className="text-xs text-justify text-black">
                           Author Book
                         </p>
@@ -174,8 +177,10 @@ function PublicLibrary() {
                         <h1 className="text-lg underline  text-center text-black">
                           Summary
                         </h1>
-                        <p className="text-xs text-justify text-black">
-                          Lorem ipsum dolor sit amet consectetur adipisicing
+                        <p className="text-xs text-justify mt-4 text-black">{
+                          brok.summary_text
+                        }
+                          {/* Lorem ipsum dolor sit amet consectetur adipisicing
                           elit. Nihil ipsam consectetur sunt quod. Molestias,
                           maiores sapiente. Unde quaerat, tenetur labore quo
                           consequatur quibusdam repellendus harum ad vitae
@@ -198,7 +203,7 @@ function PublicLibrary() {
                           voluptatum dicta sed deleniti, quae accusamus
                           perferendis temporibus voluptatibus neque ea. Natus,
                           dolores error optio doloribus vero aut nam minus rerum
-                          quidem praesentium neque enim, odio dolorem impedit!
+                          quidem praesentium neque enim, odio dolorem impedit! */}
                         </p>
                       </div>
                       <div className="absolute z-10 w-[21rem] h-[30rem] bg-blue-300 rounded-r-3xl">

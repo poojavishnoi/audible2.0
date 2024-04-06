@@ -4,9 +4,13 @@ import ReactAudioPlayer from "react-h5-audio-player";
 import "react-h5-audio-player/lib/styles.css";
 import FlipPage from "react-flip-page";
 
-
-export default function NewFlipBook( {setPausedTime,audioTime, audioSrc, subtitleSrc }) {
-
+export default function NewFlipBook({
+  setAudioDuration,
+  setPausedTime,
+  audioTime,
+  audioSrc,
+  subtitleSrc,
+}) {
   const audioRef = useRef(null);
   const [subtitles, setSubtitles] = useState([]);
   const [currentSubtitleIndex, setCurrentSubtitleIndex] = useState(-1);
@@ -16,6 +20,9 @@ export default function NewFlipBook( {setPausedTime,audioTime, audioSrc, subtitl
   const [duration, setDuration] = useState('');
 
 console.log(subtitleSrc, "subtitles");
+  const characterLimit = 600;
+  const [duration, setDuration] = useState("");
+  const [pageNumber, setPageNumber] = useState(0);
 
   useEffect(() => {
     if (typeof subtitleSrc !== "object") {
@@ -30,11 +37,13 @@ console.log(subtitleSrc, "subtitles");
       //     const subtitles = data
       //       .trim()
       //       .split("\n\n")
-
-     const subtitles = subtitleSrc.trim()
+      const subtitles = subtitleSrc.trim()
         .split(/\n\s*\n/)
             .map((subtitle) => {
-              const [index, time, text] = subtitle?.split("\n");
+              const lines = subtitle.split("\n").filter(line => line.trim() !== ""); // Filter out empty lines
+              const index = lines.shift(); // Remove and get the index
+              const time = lines.shift(); // Remove and get the time
+              const text = lines.join("\n"); // Concatenate the remaining lines as text
               return {
                 index,
                 start: TimeInDecimal(time?.split(" --> ")[0]),
@@ -42,43 +51,54 @@ console.log(subtitleSrc, "subtitles");
                 text,
               };
             });
-
+            //console.log(subtitles,"subtitles")
           setSubtitles(subtitles);
-   
     }
-
-  },[]);
-useEffect(() => { 
-  if(typeof audioSrc !== "object"){
-    setDuration(`data:audio/wav;base64,${audioSrc}`)
-  }
-  else{
-    setDuration(audioSrc.src)
-
-  }
-  subtitles? pageDistribution() : <>  </>
-}, [subtitles, audioSrc]);
+  }, []);
+  useEffect(() => {
+    if (typeof audioSrc !== "object") {
+      setDuration(`data:audio/wav;base64,${audioSrc}`);
+    } else {
+      setDuration(audioSrc.src);
+    }
+    subtitles ? pageDistribution() : <></>;
+  }, [subtitles, audioSrc]);
 
   useEffect(() => {
+    let number = pageNumber;
+    let currentPageIndex = 0;
+    for (let i = 0; i < pages.length; i++) {
+      const pageStartTime = pages[i]?.content[0].start;
 
-    for (let index = 0; index < pages.length; index++) {
-
-     if (time > pages[index].content.slice(-1)[0].end) {
-        audioRef.current.gotoNextPage();
+      if (time >= pages[i]?.content.slice(-1)[0].end) {
+        currentPageIndex = i + 1;
       }
-      if (time < pages[index].content[0].start) {
-        audioRef.current.gotoPreviousPage();
+
+      if (i > 0 && time < pageStartTime) {
+        currentPageIndex = i - 1;
+        break;
       }
     }
-  }, [time, pages]);
 
+    while (number < currentPageIndex) {
+      console.log(number, "number");
+      audioRef.current.gotoNextPage();
+      number++;
+      setPageNumber(currentPageIndex);
+    }
+
+    while (number > currentPageIndex) {
+      console.log(number, "number");
+      audioRef.current.gotoPreviousPage();
+      number--;
+      setPageNumber(currentPageIndex);
+    }
+  }, [time, pages, audioRef, pageNumber]);
 
   const pageDistribution = () => {
     var pageArray = [];
     var subtitleIndex = 0;
     var pageCount = 1;
-
-
 
     while (subtitles.length > subtitleIndex) {
       var pageFilled = 0;
@@ -109,13 +129,12 @@ useEffect(() => {
     setPages(pageArray);
   };
 
-
   const TimeInDecimal = (time) => {
-
     const timeString = time;
     const [hours, minutes, seconds] = timeString?.split(":");
     const milliseconds = parseInt(timeString.split(",")[1]);
-    const totalSeconds = parseInt(seconds) + parseInt(minutes) * 60 + parseInt(hours) * 3600;
+    const totalSeconds =
+      parseInt(seconds) + parseInt(minutes) * 60 + parseInt(hours) * 3600;
     const timeInSeconds = totalSeconds + milliseconds / 1000;
 
     return timeInSeconds;
@@ -123,7 +142,7 @@ useEffect(() => {
 
   const handleAudioTimeUpdate = (event) => {
     const currentTime = event.target.currentTime;
-    setPausedTime(currentTime)
+    setPausedTime(currentTime);
     setTime(currentTime);
     const newSubtitleIndex = subtitles.findIndex((subtitle) => {
       return subtitle.start <= currentTime && subtitle.end >= currentTime;
@@ -132,24 +151,21 @@ useEffect(() => {
     if (newSubtitleIndex !== currentSubtitleIndex) {
       setCurrentSubtitleIndex(newSubtitleIndex);
     }
-
   };
-
 
   if (!subtitles) {
     return <div>Loading subtitles...</div>;
   }
 
-  // const handleLoadMetadata = (meta) => {
-  //   const {duration} = meta.target;
-  //   setDuration(duration);
-  // }
+  const handleLoadMetadata = (meta) => {
+    const { duration } = meta.target;
+    setAudioDuration(duration);
+  };
 
   const handlePlayPause = (e) => {
     e.target.currentTime = audioTime;
+  };
 
-  }
- 
   const currentSubtitle = subtitles[currentSubtitleIndex];
 
   return (
@@ -159,59 +175,54 @@ useEffect(() => {
         current
         onListen={handleAudioTimeUpdate}
         //  src= {`data:audio/wav;base64,${audioSrc}`}
-        //src={audioSrc.src}
+        // src={audioSrc.src}
         src={duration}
         type="audio/wav"
-        //onLoadedMetaData={handleLoadMetadata}
+        onLoadedMetaData={handleLoadMetadata}
         className="mb-4 "
         onLoadStart={handlePlayPause}
         controls
-        autoPlay = {false}
+        autoPlay={false}
       />
 
-
-    <div >
-      <FlipPage
-        ref={audioRef}
-        flipOnTouchZone={0.8}
-        uncutPages={true}
-        orientation="horizontal"
-        // responsive={true}
-        className="flip"
-        width={990}
-        style={{
-          padding: "0",
-          margin: "0",
-        }}
-        showTouchHint
-        height={620}
-        animationDuration="1000"
-      >
-     
-
-        {pages.map((page, pindex) => (
-          <article
-            key={pindex}
-            className="p-7 relative text-center flex flex-col text-black"
-          >
-
-            {page.content.map((subtitle, index) => {
-            
-              return (
-                <div className=  " md:w-[45%] text-left">
-                  <p
-                    key={index}
-                    className={`p-2 ${
-                      subtitle.text === currentSubtitle?.text
-                        ? "font-bold text-red-800 text-3xl"
-                        : "font-normal text-xl"
-                    }`}
-                  >
-                    {subtitle?.text}
-                  </p>
-                </div>
-              );
-            })}
+      <div>
+        <FlipPage
+          ref={audioRef}
+          flipOnTouchZone={0.8}
+          uncutPages={true}
+          orientation="horizontal"
+          // responsive={true}
+          className="flip"
+          width={1100}
+          style={{
+            padding: "0",
+            margin: "0",
+          }}
+          showTouchHint
+          height={720}
+          animationDuration="1000"
+        >
+          {pages.map((page, pindex) => (
+            <article
+              key={pindex}
+              className="p-7 relative text-center flex flex-col text-black"
+            >
+              {page.content.map((subtitle, index) => {
+                return (
+                  <div className=" md:w-[45%] text-left">
+                    <p
+                      key={index}
+                      className={`p-2 ${
+                        subtitle.text === currentSubtitle?.text
+                          ? "font-bold text-red-800 text-3xl"
+                          : "font-normal text-xl"
+                      }`}
+                    >
+                      {subtitle?.text}
+                    </p>
+                  </div>
+                );
+              })}
 
             <div className="absolute right_image bg-white left-[50%] top-0 ">
               <img
@@ -226,10 +237,19 @@ useEffect(() => {
      
 
       </FlipPage>
+              <div className="absolute right_image bg-white left-[50%] top-0 ">
+                <img
+                  className="object-cover h-full object-center py-5 px-10"
+                  src="https://images.pexels.com/photos/3662839/pexels-photo-3662839.jpeg?auto=compress&cs=tinysrgb&w=1600"
+                  alt=""
+                />
+              </div>
+            </article>
+          ))}
+        </FlipPage>
       </div>
     </div>
   );
 }
-
 
 // className="w-1/2 text-left  "

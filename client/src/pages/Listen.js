@@ -16,9 +16,11 @@ function Listen() {
   const [loading, setLoading] = useState(true);
   const [audioTime, setAudioTime] = useState(0);
   const [pausedTime, setPausedTime] = useState(audioTime);
+  const [audioDuration, setAudioDuration] = useState(0)
   const {
     state: { id },
   } = useLocation();
+console.log(audioDuration, "audioDuration");
 
 // useEffect(()  => {
   
@@ -164,7 +166,7 @@ function Listen() {
             className={`fade-in-out text-white rounded-3xl mx-10 ok mt-4 w-11/12 h-full px-10`}
           >
             <div className="  justify-start">
-              <NewFlipBook setPausedTime={setPausedTime} audioTime={audioTime} audioSrc={url} subtitleSrc={srt} />
+              <NewFlipBook setAudioDuration={setAudioDuration} setPausedTime={setPausedTime} audioTime={audioTime} audioSrc={url} subtitleSrc={srt} />
             </div>
           </div>
         )}
