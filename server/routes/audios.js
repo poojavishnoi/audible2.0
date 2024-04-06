@@ -8,6 +8,8 @@ const upload = multer({
     fieldSize: 1024 * 1024 * 10 // increase the maximum allowed field value size
   }
 });
+const fs = require('fs');
+const path = require('path');
 const Audio = require('../models/audio')
 const request = require("request");
 
@@ -15,12 +17,11 @@ router.post("/save", upload.fields([{ name: 'audio', maxCount: 1 }, { name: 'srt
   const { image, file_name, file, file_type, author_email, quality, text} = req.body;
   //console.log("req.body: ", req.body);
   const { audio, srt } = req.files;
-  const visibility = true
+  const visibility = req.body.visibility
   const listeners = [{author_email, paused: 0}]
   const audioData = audio[0].buffer.toString('base64');
   const srtData = srt[0].buffer.toString('base64');
-  console.log("summary", req.body.summary_audio);
-  console.log("summary", req.body.summary_text);
+  console.log("summary", req.body.visibility);
   // const textValue = req.body.text; 
   //     let summary = '';
   //     console.log("converting text::::::::", textValue);
@@ -41,7 +42,7 @@ router.post("/save", upload.fields([{ name: 'audio', maxCount: 1 }, { name: 'srt
     image,
     author_email,
     quality,
-    visibility,
+    visibility:true,
     listeners,
     audio: audioData,
     srt: srtData,
@@ -52,20 +53,20 @@ router.post("/save", upload.fields([{ name: 'audio', maxCount: 1 }, { name: 'srt
     language: req.body.language,
   });
   console.log("newAudio: ", newAudio);
-  // try{
-  //   const exists = await Audio.find({file_name: file_name, author_email: author_email})
-  //   if(exists>0){
-  //     console.log("File already exists", exists);
-  //     return res.send({success: false, message: "File already exists"})
-  //   }
-  //   else{
-  //     const savedAudio = await newAudio.save();
-  //     return res.status(200).send({success: true, audio: savedAudio})
-  //   }
+  try{
+    const exists = await Audio.find({file_name: file_name, author_email: author_email})
+    if(exists>0){
+      console.log("File already exists", exists);
+      return res.send({success: false, message: "File already exists"})
+    }
+    else{
+      const savedAudio = await newAudio.save();
+      return res.status(200).send({success: true, audio: savedAudio})
+    }
     
-  // }catch(error){
-  //   return res.status(400).send({success: false, msg:error})
-  // }
+  }catch(error){
+    return res.status(400).send({success: false, msg:error})
+  }
 
   // console.log("srt:-----------------\n", srtFile);
   // const newSong = song({
@@ -92,6 +93,8 @@ router.get("/getOwn/:email", async(req,res) => {
     author_email: true,
     visibility: true,
     listeners: true,
+    duration: true,
+    language: true,
   }
   const data = await Audio.find(filter, options)
   if(data){
@@ -102,7 +105,7 @@ router.get("/getOwn/:email", async(req,res) => {
 })
 
 router.get("/getPersonalLibrary/:email", async(req,res) => {
-  const filter = {visibility: true, listeners: {$elemMatch: {email: req.params.email}}}
+  const filter = {visibility: true, listeners: {$elemMatch: {author_email: req.params.email}}}
   const options = {
     _id: true,
     file_name: true,
@@ -110,6 +113,10 @@ router.get("/getPersonalLibrary/:email", async(req,res) => {
     author_email: true,
     visibility: true,
     listeners: true,
+    summary_text: true,
+    summary_audio: true,
+    language: true,
+    duration: true,
   }
 
   const data = await Audio.find(filter, options);
@@ -132,6 +139,8 @@ router.get("/getPublicLibrary", async(req,res) => {
     listeners: true,
     summary_text: true,
     summary_audio: true,
+    language: true,
+    duration: true,
   }
 
   const data = await Audio.find(filter, options);
@@ -157,15 +166,38 @@ router.get("/getBook/:id", async(req,res) => {
     text: true,
   }
   const data = await Audio.findById(filter, options)
-  if(data){
-     const dhwani = data.audio.toString("base64");
-    const srt = Buffer.from( data.srt, "base64");
-    data.srt = srt.toString('utf-8');
-    data.audio = dhwani;
-    // const audioBlob = new Blob([dhwani], { type: "audio/wav" });
-    // const responseObj = { success: true, audio: audioBlob, someData: data };
-    // return res.status(200).send(responseObj);
-    return res.status(200).send({success: true, audio: data})
+  if(data) {
+    const filePath = path.join(__dirname, '../Story1', 'synthesis_normal.wav');
+    fs.readFile(filePath, (err, audioData) => {
+      if (err) {
+        console.error('Error reading audio file:', err);
+        return res.status(500).send({success: false, msg: 'Error reading audio file'});
+      }
+
+      const srtPath = path.join(__dirname, '../Story1', 'synthesis_normal.srt');
+      fs.readFile(srtPath, (err, srtData) => {
+        if (err) {
+          console.error('Error reading srt file:', err);
+          return res.status(500).send({success: false, msg: 'Error reading srt file'});
+        }
+
+        const audioBase64 = audioData.toString('base64');
+        const srtText = srtData.toString('utf-8');
+
+        data.audio = audioBase64;
+        data.srt = srtText;
+        return res.status(200).send({success: true, audio: data});
+      });
+    });
+  // if(data){
+  //   const dhwani = data.audio.toString("base64");
+  //   const srt = Buffer.from( data.srt, "base64");
+  //   data.srt = srt.toString('utf-8');
+  //   data.audio = dhwani;
+  //   // const audioBlob = new Blob([dhwani], { type: "audio/wav" });
+  //   // const responseObj = { success: true, audio: audioBlob, someData: data };
+  //   // return res.status(200).send(responseObj);
+  //   return res.status(200).send({success: true, audio: data})
     }else{
     return res.status(400).send({success:false, msg: 'Data not found'})
   }

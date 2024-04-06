@@ -35,6 +35,7 @@ router.post('/coqui', async function(req, res) {
         if (err) { 
           console.log('Error:', err); 
         } else {
+          console.log("yeeee")
           const resp = await request.get('http://127.0.0.1:5000/delete');
         }
       }
@@ -66,7 +67,7 @@ router.post("/summarise", async (req, res) => {
       let summary = '';
       console.log("converting text::::::::", textValue);
       const response = await request.post('http://127.0.0.1:5000/summarise',
-      {json:{text:textValue}})
+      {json:{text:textValue, lan: req.body.lan}})
       .on('data', (data) => {
         summary += data;
       })

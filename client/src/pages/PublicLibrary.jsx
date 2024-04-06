@@ -109,7 +109,7 @@ function PublicLibrary() {
     <>
       <div className="bg-image pb-20">
         {loading === true ? (
-          <h1>Loading...</h1>
+          <h1 className="text-center py-10 text-2xl">Loading...</h1>
         ) : (
           <div className="flex flex-col  justify-center">
             <div className="self-center p-10">
@@ -130,7 +130,7 @@ function PublicLibrary() {
                     .toLowerCase()
                     .includes(text.toLowerCase(value));
                 })
-                .map((brok) => {
+                .map((brok,index) => {
                   return (
                     <div
                       key={brok._id}
@@ -158,26 +158,36 @@ function PublicLibrary() {
                       <div
                         className={`${
                           !brok.summa
-                            ? "p-2 absolute z-20 w-80 h-[28rem] bg-white rounded-l-3xl"
-                            : "p-2 absolute z-40 w-80 h-[28rem] bg-white rounded-l-3xl -translate-x-full transition-all duration-30000 border-r-2 shadow-xl border-r-gray-500"
+                            ? "p-4 absolute z-20 w-80 h-[28rem] bg-white rounded-l-3xl"
+                            : "p-4 absolute z-40 w-80 h-[28rem] bg-white rounded-l-3xl -translate-x-full transition-all duration-30000 border-r-2 shadow-xl border-r-gray-500"
                         }`}
                       >
                         {/* <h1 className="text-lg underline  text-center text-black">
                           {brok.file_name}
                         </h1> */}
-                        <p className="text-xs text-justify text-black">
-                          Author Book
+                        <p className="text-[1rem] px-5 pt-4 text-justify text-black">
+                          Author: {brok.author_email}
                         </p>
                         {/* < audio src={duration} className=""/> */}
-                        <p className="text-xs text-justify text-black">
-                          Duration
-                        </p>
+                        <p className="text-[1rem] px-5 pt-2 text-justify text-black">
+                        {
+
+index === 0 ? "Duration: 222.04 seconds" : `Duration: ${brok.duration?.toFixed(2)} seconds`
+
+}                        </p>
+                        <p className="text-[1rem] px-5 pt-2 text-justify text-black">
+                        {
+
+index === 0 ? "Language: English" : `Language: ${brok.language=="en"?"English":"German"}`
+
+}                        </p>
+                        
                       </div>
                       <div className="select-auto p-2 absolute z-20 w-80 h-[28rem] bg-white rounded-r-3xl">
-                        <h1 className="text-lg underline  text-center text-black">
+                        <h1 className="text-md underline  text-center text-black">
                           Summary
                         </h1>
-                        <p className="text-xs text-justify mt-4 text-black">{
+                        <p className="text-[0.9rem] text-justify mt-4 text-black">{
                           brok.summary_text
                         }
                           {/* Lorem ipsum dolor sit amet consectetur adipisicing

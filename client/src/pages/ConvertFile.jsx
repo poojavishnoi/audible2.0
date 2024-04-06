@@ -54,7 +54,7 @@ function ConvertFile() {
             speed: speed,
             name: name,
             file: file,
-            lan: "en",
+            lan: lan,
           },
           {
             headers: { "Content-Type": "application/json" },
@@ -109,6 +109,8 @@ function ConvertFile() {
     } catch {}
   };
 
+  console.log(saveType, "saveType");
+
   const Saveaudioandtext = async (name, speed, user) => {
     try {
 
@@ -117,12 +119,14 @@ function ConvertFile() {
           `${baseUrl}api/convert/summarise`,
           {
             text: JSON.stringify(textValue),
+            lan: lan
           },
           {
             headers: { "Content-Type": "application/json" },
           }
         )
         .then(async (resp) => {
+          console.log(resp.data);
           setSummaudio(resp.data.summary.audio);
           setSummary(resp.data.summary.text);
         })
@@ -149,6 +153,8 @@ function ConvertFile() {
       formData.append("summary_audio", summaudio);
       formData.append("summary_text", summary);
       formData.append("language", lan);
+      formData.append("visiblity", saveType);
+      formData.append("duration", audioDuration);
       await axios
         .post(`${baseUrl}api/mongi/save`, formData, {
           headers: { "Content-Type": "multipart/form-data" },

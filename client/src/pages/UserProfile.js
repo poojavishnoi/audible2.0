@@ -94,14 +94,14 @@ function UserProfile() {
                 </h1>
 
                 <div className="flex flex-wrap gap-4 pt-5">
-                  {books.audio?.map((book) => {
+                  {books.audio?.map((book, index) => {
                     return (
                       <div
                         key={book._id}
                         onClick={() => {
                           flipLogic(book._id);
                         }}
-                        className="sm:ml-[50%] md:ml-[50%] lg:ml-[25%]  w-[21rem] h-[30rem] relative flex items-center hover:cursor-pointer"
+                        className="sm:ml-[50%] md:ml-[50%] lg:ml-[50%]  w-[21rem] h-[30rem] relative flex items-center hover:cursor-pointer"
                       >
                         <div
                           className={`${
@@ -110,6 +110,10 @@ function UserProfile() {
                               : "absolute z-20 w-[21rem] h-[30rem] rounded-r-3xl transition-all duration-30000 rotate-y-180 origin-left"
                           }`}
                         >
+
+<h1 className="text-2xl absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white font-bold tracking-wider	 ">
+                          {book.file_name}
+                        </h1>
                           <img
                             src={`${book.image}`}
                             className="w-full h-full rounded-r-3xl"
@@ -119,50 +123,42 @@ function UserProfile() {
                         <div
                           className={`${
                             !book.summa
-                              ? "p-2 absolute z-20 w-80 h-[28rem] bg-white rounded-l-3xl"
-                              : "p-2 absolute z-40 w-80 h-[28rem] bg-white rounded-l-3xl -translate-x-full transition-all duration-30000 border-r-2 shadow-xl border-r-gray-500"
+                              ? "p-4 absolute z-20 w-80 h-[28rem] bg-white rounded-l-3xl"
+                              : "p-4 absolute z-40 w-80 h-[28rem] bg-white rounded-l-3xl -translate-x-full transition-all duration-30000 border-r-2 shadow-xl border-r-gray-500"
                           }`}
                         >
-                          <h1 className="text-lg underline  text-center text-black">
+                          {/* <h1 className="text-lg underline  text-center text-black">
                             Title
-                          </h1>
-                          <p className="text-xs text-justify text-black">
-                            Author Book
+                          </h1> */}
+                          <p className="text-[1rem] px-5 pt-4 text-justify text-black">{
+
+                          }
+                            Author: {book.author_email}
                           </p>
-                          <p className="text-xs text-justify text-black">
-                            Duration
+                          <p className="text-[1rem] px-5 pt-2 text-justify text-black">
+                            {
+
+                              index === 0 ? "Duration: 222.04 seconds" : `Duration: ${book.duration?.toFixed(2)} seconds`
+                            
+                          }
                           </p>
+                          <p className="text-[1rem] px-5 pt-2 text-justify text-black">
+                          {
+
+index === 0 ? "Language: English" : `Language: ${book.language=="en"?"English":"German"}`
+
+}
+                          
+                        </p>
                         </div>
                         <div className="select-auto p-2 absolute z-20 w-80 h-[28rem] bg-white rounded-r-3xl">
-                          <h1 className="text-lg underline  text-center text-black">
+                          <h1 className="text-md underline  text-center text-black">
                             Summary
                           </h1>
-                          <p className="text-xs text-justify text-black">
-                            Lorem ipsum dolor sit amet consectetur adipisicing
-                            elit. Nihil ipsam consectetur sunt quod. Molestias,
-                            maiores sapiente. Unde quaerat, tenetur labore quo
-                            consequatur quibusdam repellendus harum ad vitae
-                            inventore amet dolore. Adipisci laboriosam est
-                            fugiat vero facilis aspernatur maiores, eveniet
-                            harum, aliquid inventore quae laborum
-                            necessitatibus, veniam cupiditate vitae quaerat
-                            nesciunt deserunt repudiandae. Optio, in! Magni
-                            eveniet iusto quam veritatis corrupti. Est
-                            laudantium perspiciatis, veritatis iure voluptatum
-                            libero ipsa, quo eligendi delectus impedit soluta
-                            officiis non ab blanditiis! Dolorum, dicta. Numquam
-                            voluptates hic recusandae totam sint ipsa inventore
-                            consequuntur laboriosam officia. Veniam nihil
-                            reprehenderit, fugit impedit ad quae molestiae
-                            libero reiciendis sit alias facilis quam provident
-                            consectetur accusamus voluptas inventore!
-                            Repudiandae saepe alias excepturi, doloremque ipsum
-                            doloribus explicabo consequatur reiciendis
-                            architecto. Asperiores dignissimos voluptatum dicta
-                            sed deleniti, quae accusamus perferendis temporibus
-                            voluptatibus neque ea. Natus, dolores error optio
-                            doloribus vero aut nam minus rerum quidem
-                            praesentium neque enim, odio dolorem impedit!
+                          <p className="text-[0.9rem] text-justify text-black">
+
+                            {book.summary_text}
+                           
                           </p>
                         </div>
                         <div className="absolute z-10 w-[21rem] h-[30rem] bg-blue-300 rounded-r-3xl">

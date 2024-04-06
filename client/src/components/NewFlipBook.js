@@ -17,10 +17,6 @@ export default function NewFlipBook({
   const [pages, setPages] = useState([]);
   const [time, setTime] = useState(0);
   const characterLimit = 500;
-  const [duration, setDuration] = useState('');
-
-console.log(subtitleSrc, "subtitles");
-  const characterLimit = 600;
   const [duration, setDuration] = useState("");
   const [pageNumber, setPageNumber] = useState(0);
 
@@ -184,45 +180,48 @@ console.log(subtitleSrc, "subtitles");
         controls
         autoPlay={false}
       />
+    <div >
+      <FlipPage
+        ref={audioRef}
+        flipOnTouchZone={0.8}
+        uncutPages={true}
+        orientation="horizontal"
+        // responsive={true}
+        className="flip"
+        width={990}
+        style={{
+          padding: "0",
+          margin: "0",
+        }}
+        showTouchHint
+        height={620}
+        animationDuration="1000"
+      >
+     
 
-      <div>
-        <FlipPage
-          ref={audioRef}
-          flipOnTouchZone={0.8}
-          uncutPages={true}
-          orientation="horizontal"
-          // responsive={true}
-          className="flip"
-          width={1100}
-          style={{
-            padding: "0",
-            margin: "0",
-          }}
-          showTouchHint
-          height={720}
-          animationDuration="1000"
-        >
-          {pages.map((page, pindex) => (
-            <article
-              key={pindex}
-              className="p-7 relative text-center flex flex-col text-black"
-            >
-              {page.content.map((subtitle, index) => {
-                return (
-                  <div className=" md:w-[45%] text-left">
-                    <p
-                      key={index}
-                      className={`p-2 ${
-                        subtitle.text === currentSubtitle?.text
-                          ? "font-bold text-red-800 text-3xl"
-                          : "font-normal text-xl"
-                      }`}
-                    >
-                      {subtitle?.text}
-                    </p>
-                  </div>
-                );
-              })}
+        {pages.map((page, pindex) => (
+          <article
+            key={pindex}
+            className="p-7 relative text-center flex flex-col text-black"
+          >
+
+            {page.content.map((subtitle, index) => {
+            
+              return (
+                <div className=  " md:w-[45%] text-left">
+                  <p
+                    key={index}
+                    className={`p-2 ${
+                      subtitle.text === currentSubtitle?.text
+                        ? "font-bold text-red-800 text-3xl"
+                        : "font-normal text-xl"
+                    }`}
+                  >
+                    {subtitle?.text}
+                  </p>
+                </div>
+              );
+            })}
 
             <div className="absolute right_image bg-white left-[50%] top-0 ">
               <img
@@ -237,16 +236,6 @@ console.log(subtitleSrc, "subtitles");
      
 
       </FlipPage>
-              <div className="absolute right_image bg-white left-[50%] top-0 ">
-                <img
-                  className="object-cover h-full object-center py-5 px-10"
-                  src="https://images.pexels.com/photos/3662839/pexels-photo-3662839.jpeg?auto=compress&cs=tinysrgb&w=1600"
-                  alt=""
-                />
-              </div>
-            </article>
-          ))}
-        </FlipPage>
       </div>
     </div>
   );
